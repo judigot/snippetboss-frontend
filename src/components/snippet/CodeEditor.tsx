@@ -21,10 +21,6 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType }) => {
     (typeof TRANSFORM_OPTIONS)[keyof typeof TRANSFORM_OPTIONS]
   >(TRANSFORM_OPTIONS.RAW_CODE);
 
-  const [prevRadioSelection, setPrevRadioSelection] = useState<
-    (typeof TRANSFORM_OPTIONS)[keyof typeof TRANSFORM_OPTIONS] | null
-  >(null);
-
   const transformedContent = (() => {
     switch (transformType) {
       case TRANSFORM_OPTIONS.RAW_CODE:
@@ -62,9 +58,6 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType }) => {
         .catch(() => {});
     }
     setIsBeingEdited(() => false);
-    if (prevRadioSelection) {
-      setTransformType(() => prevRadioSelection);
-    }
   };
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -101,11 +94,20 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType }) => {
                 handleUpdate(updatedValue);
               }}
               onKeyDown={(e) => {
-                if (e.key === 'Escape') {
+                const CTRL_S: boolean =
+                  (e.metaKey || e.ctrlKey) && e.key === 's';
+
+                const CTRL_ENTER: boolean =
+                  (e.metaKey || e.ctrlKey) && e.key === 'Enter';
+
+                const ESCAPE: boolean = e.key === 'Escape';
+
+                if (ESCAPE) {
                   e.currentTarget.blur();
                 }
 
-                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                if (CTRL_S || CTRL_ENTER) {
+                  e.preventDefault();
                   const updatedValue: string = e.currentTarget.value;
                   handleUpdate(updatedValue);
                 }
@@ -124,8 +126,6 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType }) => {
           {!isBeingEdited && (
             <pre
               onDoubleClick={() => {
-                setPrevRadioSelection(() => transformType);
-                setTransformType(() => TRANSFORM_OPTIONS.DEFAULT);
                 setIsBeingEdited(() => true);
                 setTimeout(() => {
                   textAreaRef.current?.focus();
