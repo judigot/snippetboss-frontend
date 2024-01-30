@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { language } from '@/types';
 import { readLanguage } from '@/api/language/read-language';
-import CodeViewer from '@/components/snippet/Snippets';
+import CodeEditor from '@/components/snippet/Snippets';
 import Prefixes from '@/components/prefix/Prefixes';
 import { AddLanguageComponent } from '@/components/language/AddLanguageComponent';
 
@@ -191,7 +191,7 @@ export default function Languages() {
             <Prefixes language={selectedLang} />
           )}
           {currentPage === pages.SNIPPETS && (
-            <>{<CodeViewer language={selectedLang} />}</>
+            <>{<CodeEditor language={selectedLang} />}</>
           )}
         </>
       )}

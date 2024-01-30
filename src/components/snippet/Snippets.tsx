@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { CodeEditor } from '@/components/snippet/CodeEditor';
 import { language } from '@/types';
 import { readSnippet } from '@/api/snippet/read-snippet';
 import { SnippetResponseType } from '@/types';
+import { SnippetViewer } from '@/components/snippet/CodeEditor';
 
 interface Props {
   language: language;
 }
 
-export default function CodeViewer({ language }: Props) {
+export default function CodeEditor({ language }: Props) {
   const [snippets, setSnippets] = useState<SnippetResponseType[] | null>([]);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function CodeViewer({ language }: Props) {
               <div key={snippet.snippet_id}>
                 <h2>{snippet.prefix_name}</h2>
                 {snippet.snippet_content !== null && (
-                  <CodeEditor snippet={snippet} />
+                  <SnippetViewer snippet={snippet} />
                 )}
               </div>
             ))}
