@@ -1,4 +1,3 @@
-'use client';
 import { useCallback, useEffect, useState } from 'react';
 import { language } from '@/types/types';
 import { readLanguage } from '@/api/language/read-language';

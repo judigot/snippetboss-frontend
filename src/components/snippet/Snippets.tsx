@@ -1,5 +1,3 @@
-// 'use client';
-
 import { readSnippet } from '@/api/snippet/read-snippet';
 import { updateSnippet } from '@/api/snippet/update-snippet';
 import { SnippetResponseType } from '@/types/types';

@@ -1,5 +1,3 @@
-'use client';
-
 import { FormEvent, useState } from 'react';
 import { language } from '@/types/types';
 import { createLanguage } from '@/api/language/create-language';
