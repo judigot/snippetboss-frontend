@@ -1,6 +1,6 @@
 import { readPrefix } from '@/api/prefix/read-prefix';
 import { readPrefixByLanguage } from '@/api/prefix/read-prefix-by-language';
-import { language, prefix } from '@/types/types';
+import { language, prefix } from '@/types';
 import { useEffect, useState } from 'react';
 
 interface Props {

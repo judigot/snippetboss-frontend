@@ -1,5 +1,5 @@
 import { customFetch } from '@/api/customFetch';
-import { SnippetResponseType } from '@/types/types';
+import { SnippetResponseType } from '@/types';
 
 export const readPrefixByLanguage = async (
   language?: string,

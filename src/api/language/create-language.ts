@@ -1,5 +1,5 @@
 import { customFetch } from '@/api/customFetch';
-import { language } from '@/types/types';
+import { language } from '@/types';
 
 interface Body extends Omit<language, 'language_id'> {}
 

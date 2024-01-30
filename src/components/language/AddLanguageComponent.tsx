@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import { language } from '@/types/types';
+import { language } from '@/types';
 import { createLanguage } from '@/api/language/create-language';
 
 export function AddLanguageComponent() {

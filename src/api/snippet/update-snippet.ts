@@ -1,5 +1,5 @@
 import { customFetch } from '@/api/customFetch';
-import { snippet } from '@/types/types';
+import { snippet } from '@/types';
 
 interface Body
   extends Pick<snippet, 'snippet_id' | 'snippet_content'> {}

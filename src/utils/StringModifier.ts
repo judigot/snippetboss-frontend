@@ -1,4 +1,4 @@
-import { SnippetResponseType } from '@/types/types';
+import { SnippetResponseType } from '@/types';
 
 export const StringModifier = (initialValue: string) => {
   let result: string = initialValue;
