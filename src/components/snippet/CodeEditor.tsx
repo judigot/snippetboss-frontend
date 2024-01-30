@@ -76,120 +76,118 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType }) => {
   };
 
   return (
-    <>
-      <div
-        style={{
-          display: 'grid',
-          gap: '50px',
-          gridTemplateColumns: '1fr 1fr',
-          gridColumnGap: '50px',
-        }}
-      >
-        <div>
-          {isBeingEdited && (
-            <textarea
-              ref={textAreaRef}
-              onBlur={(e) => {
+    <div
+      style={{
+        width: '1000px',
+        display: 'grid',
+        gap: '50px',
+        gridTemplateColumns: '1fr 0.5fr',
+        gridColumnGap: '50px',
+      }}
+    >
+      <div>
+        {isBeingEdited && (
+          <textarea
+            ref={textAreaRef}
+            onBlur={(e) => {
+              const updatedValue: string = e.currentTarget.value;
+              handleUpdate(updatedValue);
+            }}
+            onKeyDown={(e) => {
+              const CTRL_S: boolean = (e.metaKey || e.ctrlKey) && e.key === 's';
+
+              const CTRL_ENTER: boolean =
+                (e.metaKey || e.ctrlKey) && e.key === 'Enter';
+
+              const ESCAPE: boolean = e.key === 'Escape';
+
+              if (ESCAPE) {
+                e.currentTarget.blur();
+              }
+
+              if (CTRL_S || CTRL_ENTER) {
+                e.preventDefault();
                 const updatedValue: string = e.currentTarget.value;
                 handleUpdate(updatedValue);
-              }}
-              onKeyDown={(e) => {
-                const CTRL_S: boolean =
-                  (e.metaKey || e.ctrlKey) && e.key === 's';
-
-                const CTRL_ENTER: boolean =
-                  (e.metaKey || e.ctrlKey) && e.key === 'Enter';
-
-                const ESCAPE: boolean = e.key === 'Escape';
-
-                if (ESCAPE) {
-                  e.currentTarget.blur();
-                }
-
-                if (CTRL_S || CTRL_ENTER) {
-                  e.preventDefault();
-                  const updatedValue: string = e.currentTarget.value;
-                  handleUpdate(updatedValue);
-                }
-              }}
-              style={{
-                ...snippetStyling,
-                ...{
-                  resize: 'none',
-                },
-              }}
-              spellCheck={false}
-              defaultValue={defaultValue}
-            />
-          )}
-
-          {!isBeingEdited && (
-            <pre
-              onDoubleClick={() => {
-                setIsBeingEdited(() => true);
-                setTimeout(() => {
-                  textAreaRef.current?.focus();
-                  const length = textAreaRef.current?.value.length;
-                  if (length != null) {
-                    textAreaRef.current?.setSelectionRange(length, length);
-                  }
-                });
-              }}
-              style={snippetStyling}
-              contentEditable={isBeingEdited}
-            >
-              <code>{transformedContent}</code>
-            </pre>
-          )}
-        </div>
-
-        <div style={{ zoom: '150%' }}>
-          {Object.entries(TRANSFORM_OPTIONS).map(
-            (
-              [transformOptionKey, transformOptionValue]: [
-                string,
-                (typeof TRANSFORM_OPTIONS)[keyof typeof TRANSFORM_OPTIONS],
-              ],
-              i: number,
-            ) => (
-              <div key={i}>
-                <input
-                  style={{ cursor: 'pointer' }}
-                  checked={transformType === transformOptionValue}
-                  onChange={() => {
-                    setTransformType(() => transformOptionValue);
-                  }}
-                  type="radio"
-                  id={`${transformOptionKey}_${snippet.snippet_id}`}
-                  name={`radio-option-${snippet.snippet_id}`}
-                />
-                <label
-                  style={{ cursor: 'pointer' }}
-                  htmlFor={`${transformOptionKey}_${snippet.snippet_id}`}
-                >
-                  {transformOptionValue}
-                </label>
-              </div>
-            ),
-          )}
-          <br />
-          <br />
-          <br />
-          <button
-            onClick={() => {
-              (async () => {
-                try {
-                  await navigator.clipboard.writeText(transformedContent);
-                } catch (error) {
-                  console.error('Failed to copy text to clipboard:', error);
-                }
-              })().catch(() => {});
+              }
             }}
+            style={{
+              ...snippetStyling,
+              ...{
+                resize: 'none',
+              },
+            }}
+            spellCheck={false}
+            defaultValue={defaultValue}
+          />
+        )}
+
+        {!isBeingEdited && (
+          <pre
+            onDoubleClick={() => {
+              setIsBeingEdited(() => true);
+              setTimeout(() => {
+                textAreaRef.current?.focus();
+                const length = textAreaRef.current?.value.length;
+                if (length != null) {
+                  textAreaRef.current?.setSelectionRange(length, length);
+                }
+              });
+            }}
+            style={snippetStyling}
+            contentEditable={isBeingEdited}
           >
-            Copy to Clipboard
-          </button>
-        </div>
+            <code>{transformedContent}</code>
+          </pre>
+        )}
       </div>
-    </>
+
+      <div style={{ zoom: '150%' }}>
+        {Object.entries(TRANSFORM_OPTIONS).map(
+          (
+            [transformOptionKey, transformOptionValue]: [
+              string,
+              (typeof TRANSFORM_OPTIONS)[keyof typeof TRANSFORM_OPTIONS],
+            ],
+            i: number,
+          ) => (
+            <div key={i}>
+              <input
+                style={{ cursor: 'pointer' }}
+                checked={transformType === transformOptionValue}
+                onChange={() => {
+                  setTransformType(() => transformOptionValue);
+                }}
+                type="radio"
+                id={`${transformOptionKey}_${snippet.snippet_id}`}
+                name={`radio-option-${snippet.snippet_id}`}
+              />
+              <label
+                style={{ cursor: 'pointer' }}
+                htmlFor={`${transformOptionKey}_${snippet.snippet_id}`}
+              >
+                {transformOptionValue}
+              </label>
+            </div>
+          ),
+        )}
+        <br />
+        <br />
+        <br />
+        <button
+          onClick={() => {
+            (async () => {
+              try {
+                await navigator.clipboard.writeText(transformedContent);
+              } catch (error) {
+                console.error('Failed to copy text to clipboard:', error);
+              }
+            })().catch(() => {});
+          }}
+        >
+          Copy to Clipboard
+        </button>
+      </div>
+    </div>
   );
 };
