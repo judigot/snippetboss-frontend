@@ -4,7 +4,7 @@ import { StringModifier } from '@/utils/StringModifier';
 import { snippet } from '@/types';
 import { useRef, useState } from 'react';
 
-export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType; }) => {
+export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType }) => {
   const TRANSFORM_OPTIONS = {
     DEFAULT: 'Default',
     VS_CODE: 'VS Code Snippet',
@@ -12,7 +12,7 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType; }) => {
   } as const;
 
   const [defaultValue, setDefaultValue] = useState<string>(
-    snippet.snippet_content ?? ''
+    snippet.snippet_content ?? '',
   );
 
   const [isBeingEdited, setIsBeingEdited] = useState<boolean>(false);
@@ -57,9 +57,9 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType; }) => {
             if (snippet_content !== null) {
               setDefaultValue(snippet_content);
             }
-          }
+          },
         )
-        .catch(() => { });
+        .catch(() => {});
     }
     setIsBeingEdited(() => false);
     if (prevRadioSelection) {
@@ -117,7 +117,8 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType; }) => {
                 },
               }}
               spellCheck={false}
-              defaultValue={defaultValue} />
+              defaultValue={defaultValue}
+            />
           )}
 
           {!isBeingEdited && (
@@ -147,9 +148,9 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType; }) => {
             (
               [transformOptionKey, transformOptionValue]: [
                 string,
-                (typeof TRANSFORM_OPTIONS)[keyof typeof TRANSFORM_OPTIONS]
+                (typeof TRANSFORM_OPTIONS)[keyof typeof TRANSFORM_OPTIONS],
               ],
-              i: number
+              i: number,
             ) => (
               <div key={i}>
                 <input
@@ -160,7 +161,8 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType; }) => {
                   }}
                   type="radio"
                   id={`${transformOptionKey}_${snippet.snippet_id}`}
-                  name={`radio-option-${snippet.snippet_id}`} />
+                  name={`radio-option-${snippet.snippet_id}`}
+                />
                 <label
                   style={{ cursor: 'pointer' }}
                   htmlFor={`${transformOptionKey}_${snippet.snippet_id}`}
@@ -168,7 +170,7 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType; }) => {
                   {transformOptionValue}
                 </label>
               </div>
-            )
+            ),
           )}
           <br />
           <br />
@@ -181,7 +183,7 @@ export const CodeEditor = ({ snippet }: { snippet: SnippetResponseType; }) => {
                 } catch (error) {
                   console.error('Failed to copy text to clipboard:', error);
                 }
-              })().catch(() => { });
+              })().catch(() => {});
             }}
           >
             Copy to Clipboard
