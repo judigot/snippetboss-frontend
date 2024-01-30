@@ -1,0 +1,55 @@
+:root {
+  --background-color: #1e1e1e; /* Softer dark background */
+  --text-color: #d4d4d4; /* Light grey text */
+  --link-color: #9a86fd; /* Softer link color */
+  --border-color: #2a2a2a; /* Softer border color */
+  --input-background: #2a2a2a; /* Background for input fields */
+  --input-text-color: #d4d4d4; /* Text color for input fields */
+  --input-border-color: #333333; /* Border color for input fields */
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition:
+    background-color 0.3s,
+    color 0.3s; /* Smooth transitions */
+}
+
+a {
+  color: var(--link-color);
+}
+
+textarea {
+  background-color: var(--input-background);
+  color: var(--input-text-color);
+  border: 1px solid var(--input-border-color);
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+}
+
+/* Additional styles for other elements */
+
+img {
+  filter: brightness(0.85) contrast(1.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #1e1e1e;
+    --text-color: #d4d4d4;
+    --link-color: #9a86fd;
+    --border-color: #2a2a2a;
+    --input-background: #2a2a2a;
+    --input-text-color: #d4d4d4;
+    --input-border-color: #333333;
+  }
+
+  img {
+    filter: brightness(0.85) contrast(1.1);
+  }
+
+  /* Additional dark mode specific styles */
+}
