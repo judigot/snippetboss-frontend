@@ -1,3 +1,4 @@
+import { snippetTypesAtom } from '@/state';
 import React, { useState } from 'react';
 
 interface Props {
@@ -85,7 +86,7 @@ export default function Form({
           aria-label="Select Dropdown"
         >
           <option value="">Select an option</option>
-          {Object.entries(snippetTypeOptions).map(([key, option]) => (
+          {Object.entries(snippetTypesAtom).map(([key, option]) => (
             <option key={key} value={key}>
               {option}
             </option>

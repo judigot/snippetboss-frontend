@@ -4,6 +4,9 @@ import { readLanguage } from '@/api/language/read-language';
 import CodeEditor from '@/components/snippet/Snippets';
 import Prefixes from '@/components/prefix/Prefixes';
 import { AddLanguageComponent } from '@/components/language/AddLanguageComponent';
+import { languagesAtom } from '@/state';
+import { useAtom } from 'jotai';
+import { getLangFromURL } from '@/helpers';
 
 export default function Languages() {
   const pagesKeys = {
@@ -22,18 +25,7 @@ export default function Languages() {
 
   const DEFAULT_TITLE: string = 'SnippetMaster';
 
-  const getLangFromURL = () => {
-    if (typeof window === 'undefined') {
-      return null;
-    }
-    const searchParams = new URLSearchParams(window.location.search);
-    const language = (searchParams.get('language') ?? '') || ''; // Default to an empty string if parameter is not present
-    return language;
-  };
-
-  const [languages, setLanguages] = useState<language[] | null | undefined>(
-    undefined,
-  );
+  const [languages, setLanguages] = useAtom(languagesAtom);
 
   const [selectedLang, setSelectedLang] = useState<language | null | undefined>(
     undefined,
@@ -118,6 +110,7 @@ export default function Languages() {
     pages.ALL_PREFIXES,
     pages.PREFIXES,
     pages.SNIPPETS,
+    setLanguages,
   ]);
 
   return (
