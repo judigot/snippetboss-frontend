@@ -3,6 +3,7 @@ import { language } from '@/types';
 import { readSnippet } from '@/api/snippet/read-snippet';
 import { SnippetResponseType } from '@/types';
 import { SnippetViewer } from '@/components/snippet/CodeEditor';
+import AddSnippetForm from '@/components/snippet/AddSnippetForm';
 
 interface Props {
   language: language;
@@ -21,13 +22,56 @@ export default function CodeEditor({ language }: Props) {
       .catch(() => {});
   }, [language]);
 
+  const [isAddSnippetVisible, setIsAddSnippetVisible] =
+    useState<boolean>(false);
+
   return (
     <section>
       {snippets && (
         <>
-          <h1 style={{ textAlign: 'center' }}>
-            {language.display_name} Snippets
-          </h1>
+          <div style={{ textAlign: 'center' }}>
+            <h1>{language.display_name} Snippets</h1>
+            <button
+              style={{
+                width: '100%',
+                display: 'grid',
+                placeContent: 'center',
+                background: 'none',
+                color: 'inherit',
+                border: 'none',
+                padding: 0,
+                font: 'inherit',
+                cursor: 'pointer',
+                outline: 'inherit',
+              }}
+              onClick={() => {
+                setIsAddSnippetVisible(() => !isAddSnippetVisible);
+              }}
+            >
+              <svg
+                width="20"
+                height="20"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+            </button>
+
+            {isAddSnippetVisible && (
+              <>
+                <br />
+                <AddSnippetForm closeFormCallback={setIsAddSnippetVisible} />
+              </>
+            )}
+          </div>
           <div
             style={{
               display: 'grid',
