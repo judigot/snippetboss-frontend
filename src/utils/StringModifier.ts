@@ -1,4 +1,4 @@
-import { SnippetResponseType } from '@/types';
+import { SnippetResponse } from '@/types';
 
 export const StringModifier = (initialValue: string) => {
   let result: string = initialValue;
@@ -25,10 +25,10 @@ export const StringModifier = (initialValue: string) => {
       return builder;
     },
     convertToSnippetFormat: ({
-      prefix_name,
+      prefix_names,
       prefix_description,
       languages,
-    }: SnippetResponseType) => {
+    }: SnippetResponse) => {
       result = result
         .split('\n')
         .map((line, i) => {
@@ -43,7 +43,9 @@ export const StringModifier = (initialValue: string) => {
         })
         .join('');
       result = `"${prefix_description} (${languages.map(({ display_name }) => display_name).join('/')})": {
-  "prefix": "${prefix_name}",
+  "prefix": [${prefix_names
+    .map((prefix_name) => `"${prefix_name.prefix_name}"`)
+    .join(', ')}],
   "body": [\n${result}\n  ],
   "scope": "${languages.map(({ language_name }) => language_name).join(', ')}"
 },`;

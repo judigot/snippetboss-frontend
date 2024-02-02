@@ -1,13 +1,13 @@
 import React, { KeyboardEvent, useRef, useState } from 'react';
 import { updateSnippet } from '@/api/snippet/update-snippet';
-import { SnippetResponseType } from '@/types';
+import { SnippetResponse } from '@/types';
 import { StringModifier } from '@/utils/StringModifier';
 import { snippet } from '@/types';
 
 export const SnippetViewer = ({
   snippet,
 }: {
-  snippet: SnippetResponseType;
+  snippet: SnippetResponse;
 }) => {
   const TRANSFORM_OPTIONS = {
     DEFAULT: 'Default',

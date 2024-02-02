@@ -1,10 +1,10 @@
 import { customFetch } from '@/api/customFetch';
-import { SnippetResponseType } from '@/types';
+import { SnippetResponse } from '@/types';
 
 export const readSnippet = async (
   language: string,
-): Promise<SnippetResponseType[] | null> => {
-  const result: SnippetResponseType[] | null = await customFetch.get({
+): Promise<SnippetResponse[] | null> => {
+  const result: SnippetResponse[] | null = await customFetch.get({
     url: `/snippets/${language}`,
   });
 

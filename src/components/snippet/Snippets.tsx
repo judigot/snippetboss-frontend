@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { language } from '@/types';
 import { readSnippet } from '@/api/snippet/read-snippet';
-import { SnippetResponseType } from '@/types';
+import { SnippetResponse } from '@/types';
 import { SnippetViewer } from '@/components/snippet/CodeEditor';
 import AddSnippetForm from '@/components/snippet/AddSnippetForm';
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function CodeEditor({ language }: Props) {
-  const [snippets, setSnippets] = useState<SnippetResponseType[] | null>([]);
+  const [snippets, setSnippets] = useState<SnippetResponse[] | null>([]);
 
   useEffect(() => {
     readSnippet(language.language_name)

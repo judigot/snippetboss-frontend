@@ -1,8 +1,8 @@
 import { customFetch } from '@/api/customFetch';
-import { SnippetResponseType } from '@/types';
+import { PrefixResponse } from '@/types';
 
-export const readPrefix = async (): Promise<SnippetResponseType[] | null> => {
-  const result: SnippetResponseType[] | null = await customFetch.get({
+export const readPrefix = async (): Promise<PrefixResponse[] | null> => {
+  const result: PrefixResponse[] | null = await customFetch.get({
     url: `/prefixes`,
   });
 
