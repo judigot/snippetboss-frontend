@@ -22,6 +22,13 @@ export interface snippet {
   snippet_content: string;
 }
 
+export interface prefix_name {
+  prefix_name_id: number;
+  prefix_id: number;
+  prefix_name: string;
+  is_default: boolean;
+}
+
 export type SnippetResponseType = snippet &
   prefix & {
     languages: language[];
