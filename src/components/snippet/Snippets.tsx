@@ -60,7 +60,11 @@ export default function CodeEditor({ language }: Props) {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
+                  d={
+                    !isAddSnippetVisible
+                      ? 'M12 4.5v15m7.5-7.5h-15'
+                      : 'M6 18 18 6M6 6l12 12'
+                  }
                 />
               </svg>
             </button>
