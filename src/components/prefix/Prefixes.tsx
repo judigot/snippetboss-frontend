@@ -72,7 +72,7 @@ export default function Prefixes({ language }: Props) {
       <h1>{language?.display_name ?? 'All'} Prefixes</h1>
       {prefixData?.map(({ prefix_id, prefix_description, prefix_names }) => (
         <div key={prefix_id}>
-          <h1>
+          <h2>
             {
               prefix_names.find((prefix_name) => prefix_name.is_default)
                 ?.prefix_name
@@ -83,7 +83,7 @@ export default function Prefixes({ language }: Props) {
               .map((prefix_name) => prefix_name.prefix_name)
               .join(', ')}
             )
-          </h1>
+          </h2>
           <p>{prefix_description}</p>
         </div>
       ))}

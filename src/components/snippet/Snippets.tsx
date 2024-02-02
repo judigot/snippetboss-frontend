@@ -84,7 +84,6 @@ export default function CodeEditor({ language }: Props) {
           >
             {snippets?.map((snippet) => (
               <div key={snippet.snippet_id}>
-                <h2>{snippet.prefix_name}</h2>
                 {snippet.snippet_content !== null && (
                   <SnippetViewer snippet={snippet} />
                 )}
