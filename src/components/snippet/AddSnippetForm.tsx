@@ -1,35 +1,37 @@
+import { createSnippet } from '@/api/snippet/create-snippet';
+import { unusedPrefixesByLanguageAtom } from '@/state';
+import { useAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
 
 interface Props {
+  language: string;
   closeFormCallback: (value: boolean) => void;
 }
 
-const prefixOptions = {
-  'option 1': 'Option 1',
-  'option 2': 'Option 2',
-  'option 3': 'Option 3',
-} as const;
-
 const snippetTypeOptions = {
-  specific: 'Global',
-  global: 'Specific',
+  Global: 1,
+  Specific: 2,
 } as const;
-
-interface FormData {
-  prefixInput: (typeof prefixOptions)[keyof typeof prefixOptions] | undefined;
-  snippetTypeInput:
-    | (typeof snippetTypeOptions)[keyof typeof snippetTypeOptions]
-    | undefined;
-  snippetInput: string | undefined;
-}
 
 export default function Form({
+  language,
   closeFormCallback: setIsAddSnippetVisible,
 }: Props) {
-  const [formData, setFormData] = useState<FormData>({
-    snippetInput: undefined,
-    snippetTypeInput: undefined,
-    prefixInput: undefined,
+  const [unusedPrefixesByLanguage] = useAtom(unusedPrefixesByLanguageAtom);
+
+  const prefixOptions =
+    unusedPrefixesByLanguage && unusedPrefixesByLanguage[language];
+
+  const [formData, setFormData] = useState<{
+    prefix_id: number | undefined;
+    snippet_type_id:
+      | (typeof snippetTypeOptions)[keyof typeof snippetTypeOptions]
+      | undefined;
+    snippet_content: string | undefined;
+  }>({
+    snippet_content: undefined,
+    snippet_type_id: undefined,
+    prefix_id: undefined,
   });
 
   const isAnyInputFilled = Object.values(formData).some(
@@ -62,8 +64,21 @@ export default function Form({
   const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
 
-    if (isEveryInputFilled) {
-      /* prettier-ignore */ (() => { const QuickLog = JSON.stringify(formData, null, 4); const parentDiv = document.getElementById('quicklogContainer') || (() => {const div = document.createElement('div');div.id = 'quicklogContainer';div.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 1000;';document.body.appendChild(div);return div; })(); const createChildDiv = (text: typeof QuickLog) => {const newDiv = Object.assign(document.createElement('div'), { textContent: text, style: 'font: bold 25px "Comic Sans MS"; width: max-content; max-width: 500px; word-wrap: break-word; background-color: rgb(255, 240, 0); box-shadow: white 0px 0px 5px 1px; padding: 5px; border: 3px solid black; border-radius: 10px; color: black !important; cursor: pointer;',});const handleMouseDown = (e: MouseEvent) => { e.preventDefault(); const clickedDiv = e.target instanceof Element && e.target.closest('div');if (clickedDiv !== null && e.button === 0 && clickedDiv === newDiv) { const textArea = document.createElement('textarea'); textArea.value = clickedDiv.textContent ?? ''; document.body.appendChild(textArea); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea);clickedDiv.style.backgroundColor = 'green'; setTimeout(() => { clickedDiv.style.backgroundColor = 'rgb(255, 240, 0)'; }, 1000); }};const handleRightClick = (e: MouseEvent) => { e.preventDefault(); if (parentDiv.contains(newDiv)) { parentDiv.removeChild(newDiv); }};newDiv.addEventListener('mousedown', handleMouseDown);newDiv.addEventListener('contextmenu', handleRightClick);return newDiv; };parentDiv.prepend(createChildDiv(QuickLog)); })()
+    if (
+      isEveryInputFilled &&
+      formData.snippet_content !== undefined &&
+      formData.prefix_id !== undefined &&
+      formData.snippet_type_id !== undefined
+    ) {
+      createSnippet({
+        snippet_content: formData.snippet_content ?? '',
+        prefix_id: formData.prefix_id,
+        snippet_type_id: Number(formData.snippet_type_id),
+      })
+        .then(() => {
+          setIsAddSnippetVisible(false);
+        })
+        .catch(() => {});
     }
   };
 
@@ -95,10 +110,10 @@ export default function Form({
   };
 
   useEffect(() => {
-    const snippetInput = document.querySelector(
-      `#snippetInput`,
+    const snippet_content = document.querySelector(
+      `#snippet_content`,
     ) as HTMLTextAreaElement;
-    snippetInput.focus();
+    snippet_content.focus();
   }, []);
 
   useEffect(() => {
@@ -107,13 +122,13 @@ export default function Form({
 
   return (
     <form method="POST" onSubmit={handleSubmit}>
-      <label htmlFor="snippetInput">
+      <label htmlFor="snippet_content">
         Snippet
         <br />
         <textarea
-          id="snippetInput"
-          name="snippetInput"
-          value={formData.snippetInput}
+          id="snippet_content"
+          name="snippet_content"
+          value={formData.snippet_content}
           onChange={handleChange}
           aria-label="Textarea Input"
           spellCheck={false}
@@ -129,13 +144,13 @@ export default function Form({
       </label>
       <br />
       <br />
-      <label htmlFor="prefixInput">
+      <label htmlFor="prefix_id">
         Prefix
         <br />
         <select
-          id="prefixInput"
-          name="prefixInput"
-          value={formData.prefixInput}
+          id="prefix_id"
+          name="prefix_id"
+          value={formData.prefix_id}
           onChange={handleChange}
           onKeyDown={(e) => {
             handleKeyDown(e);
@@ -143,22 +158,30 @@ export default function Form({
           aria-label="Select Dropdown"
         >
           <option value="">Select a prefix</option>
-          {Object.entries(prefixOptions).map(([key, option]) => (
-            <option key={key} value={key}>
-              {option}
-            </option>
-          ))}
+          {prefixOptions &&
+            Object.entries(prefixOptions).map(
+              ([_key, { prefix_id, prefix_description, prefix_names }]) => (
+                <option key={prefix_id} value={prefix_id}>
+                  {
+                    prefix_names.find((prefix_name) => prefix_name.is_default)
+                      ?.prefix_name
+                  }
+                  &nbsp;-&nbsp;
+                  {prefix_description}
+                </option>
+              ),
+            )}
         </select>
       </label>
       <br />
       <br />
-      <label htmlFor="snippetTypeInput">
+      <label htmlFor="snippet_type_id">
         Snippet Type
         <br />
         <select
-          id="snippetTypeInput"
-          name="snippetTypeInput"
-          value={formData.snippetTypeInput}
+          id="snippet_type_id"
+          name="snippet_type_id"
+          value={formData.snippet_type_id}
           onChange={handleChange}
           onKeyDown={(e) => {
             handleKeyDown(e);
@@ -167,8 +190,8 @@ export default function Form({
         >
           <option value="">Select a type</option>
           {Object.entries(snippetTypeOptions).map(([key, option]) => (
-            <option key={key} value={key}>
-              {option}
+            <option key={option} value={option}>
+              {key}
             </option>
           ))}
         </select>

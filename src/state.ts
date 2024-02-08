@@ -8,6 +8,10 @@ export const prefixesAtom = atom<
   Record<string, PrefixResponse[]> | null | undefined
 >(undefined);
 
+export const unusedPrefixesByLanguageAtom = atom<
+  Record<string, PrefixResponse[]> | null | undefined
+>(undefined);
+
 export const snippetTypesAtom = atom<snippet_type[] | null | undefined>(
   undefined,
 );

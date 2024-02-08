@@ -4,23 +4,32 @@ import { readSnippet } from '@/api/snippet/read-snippet';
 import { SnippetResponse } from '@/types';
 import { SnippetViewer } from '@/components/snippet/CodeEditor';
 import AddSnippetForm from '@/components/snippet/AddSnippetForm';
+import { unusedPrefixesByLanguageAtom } from '@/state';
+import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
+import { useAtom } from 'jotai';
 
 interface Props {
   language: language;
 }
 
-export default function CodeEditor({ language }: Props) {
+export default function CodeEditor({
+  language: { display_name, language_name },
+}: Props) {
   const [snippets, setSnippets] = useState<SnippetResponse[] | null>([]);
 
+  const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguageAtom] = useAtom(
+    unusedPrefixesByLanguageAtom,
+  );
+
   useEffect(() => {
-    readSnippet(language.language_name)
+    readSnippet(language_name)
       .then((result) => {
         if (result) {
           setSnippets(result);
         }
       })
       .catch(() => {});
-  }, [language]);
+  }, [language_name]);
 
   const [isAddSnippetVisible, setIsAddSnippetVisible] =
     useState<boolean>(false);
@@ -30,7 +39,7 @@ export default function CodeEditor({ language }: Props) {
       {snippets && (
         <>
           <div style={{ textAlign: 'center' }}>
-            <h1>{language.display_name} Snippets</h1>
+            <h1>{display_name} Snippets</h1>
             <button
               style={{
                 width: '100%',
@@ -45,6 +54,23 @@ export default function CodeEditor({ language }: Props) {
                 outline: 'inherit',
               }}
               onClick={() => {
+                const isLanguageNameNotInUnusedPrefixes =
+                  !unusedPrefixesByLanguage ||
+                  !(language_name in unusedPrefixesByLanguage);
+
+                if (isLanguageNameNotInUnusedPrefixes) {
+                  readPrefixUnusedByLanguage(language_name)
+                    .then((result) => {
+                      if (result) {
+                        /* Dynamically set a property on `setUnusedPrefixesByLanguageAtom` using `language_name` */
+                        setUnusedPrefixesByLanguageAtom({
+                          [language_name]: result,
+                        });
+                      }
+                    })
+                    .catch(() => {});
+                }
+
                 setIsAddSnippetVisible(() => !isAddSnippetVisible);
               }}
             >
@@ -72,7 +98,10 @@ export default function CodeEditor({ language }: Props) {
             {isAddSnippetVisible && (
               <>
                 <br />
-                <AddSnippetForm closeFormCallback={setIsAddSnippetVisible} />
+                <AddSnippetForm
+                  language={language_name}
+                  closeFormCallback={setIsAddSnippetVisible}
+                />
               </>
             )}
           </div>
