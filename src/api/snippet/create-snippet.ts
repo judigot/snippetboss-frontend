@@ -1,7 +1,10 @@
 import { customFetch } from '@/api/customFetch';
-import { snippet } from '@/types';
+import { language, snippet } from '@/types';
 
-interface Body extends Omit<snippet, 'snippet_id'> {}
+interface Body {
+  snippet: Omit<snippet, 'snippet_id'>;
+  language: language;
+}
 
 export const createSnippet = async (
   formData: Body,

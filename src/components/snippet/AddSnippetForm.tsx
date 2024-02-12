@@ -1,10 +1,11 @@
 import { createSnippet } from '@/api/snippet/create-snippet';
 import { unusedPrefixesByLanguageAtom } from '@/state';
+import { language } from '@/types';
 import { useAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
 
 interface Props {
-  language: string;
+  language: language;
   closeFormCallback: (value: boolean) => void;
 }
 
@@ -20,7 +21,8 @@ export default function Form({
   const [unusedPrefixesByLanguage] = useAtom(unusedPrefixesByLanguageAtom);
 
   const prefixOptions =
-    unusedPrefixesByLanguage && unusedPrefixesByLanguage[language];
+    unusedPrefixesByLanguage &&
+    unusedPrefixesByLanguage[language.language_name];
 
   const [formData, setFormData] = useState<{
     prefix_id: number | undefined;
@@ -71,9 +73,12 @@ export default function Form({
       formData.snippet_type_id !== undefined
     ) {
       createSnippet({
-        snippet_content: formData.snippet_content ?? '',
-        prefix_id: formData.prefix_id,
-        snippet_type_id: Number(formData.snippet_type_id),
+        snippet: {
+          snippet_content: formData.snippet_content ?? '',
+          prefix_id: formData.prefix_id,
+          snippet_type_id: Number(formData.snippet_type_id),
+        },
+        language: language,
       })
         .then(() => {
           setIsAddSnippetVisible(false);

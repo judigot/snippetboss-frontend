@@ -12,9 +12,9 @@ interface Props {
   language: language;
 }
 
-export default function CodeEditor({
-  language: { display_name, language_name },
-}: Props) {
+export default function CodeEditor({ language }: Props) {
+  const { display_name, language_name } = language;
+
   const [snippets, setSnippets] = useState<SnippetResponse[] | null>([]);
 
   const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguageAtom] = useAtom(
@@ -99,7 +99,7 @@ export default function CodeEditor({
               <>
                 <br />
                 <AddSnippetForm
-                  language={language_name}
+                  language={language}
                   closeFormCallback={setIsAddSnippetVisible}
                 />
               </>
