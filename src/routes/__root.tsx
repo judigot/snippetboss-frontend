@@ -5,7 +5,8 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <div>
-        <Link to="/">All Prefixes</Link> <Link to="/about">About</Link>
+        <Link to="/">All Prefixes</Link>
+        <Link to="/about">About</Link>
         <Link to="/snippetboss">Snippetboss</Link>
       </div>
       <hr />
