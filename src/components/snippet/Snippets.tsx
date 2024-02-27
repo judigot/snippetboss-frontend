@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { language } from '@/types';
-import { readSnippet } from '@/api/snippet/read-snippet';
 import { SnippetResponse } from '@/types';
 import { SnippetViewer } from '@/components/snippet/CodeEditor';
 import AddSnippetForm from '@/components/snippet/AddSnippetForm';
 import { unusedPrefixesByLanguageAtom } from '@/state';
 import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
 import { useAtom } from 'jotai';
+import { readSnippetByLanguage } from '@/api/snippet/read-snippet-by-language';
 
 interface Props {
   language: language;
@@ -22,7 +22,7 @@ export default function CodeEditor({ language }: Props) {
   );
 
   useEffect(() => {
-    readSnippet(language_name)
+    readSnippetByLanguage(language_name)
       .then((result) => {
         if (result) {
           setSnippets(result);
