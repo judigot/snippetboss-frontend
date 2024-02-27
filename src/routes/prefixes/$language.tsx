@@ -1,4 +1,6 @@
+import { readPrefixByLanguage } from '@/api/prefix/read-prefix-by-language';
 import Prefixes from '@/components/prefix/Prefixes';
+import { prefix } from '@/types';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/prefixes/$language')({
@@ -6,23 +8,12 @@ export const Route = createFileRoute('/prefixes/$language')({
     // if (language === 'nonexistent') {
     //   throw notFound();
     // }
-
-    return Promise.all([
-      fetch(`http://localhost:3000/api/v1/prefixes/${language}`, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      }),
-    ])
-      .then(([response1]) => Promise.all([response1.json()]))
-      .then(([result1]: [unknown]) => {
-        return {
-          selectedLanguage: language,
-          prefixes: result1,
-        };
-      });
+    return readPrefixByLanguage(language).then((prefixes: prefix[] | null) => {
+      return {
+        selectedLanguage: language,
+        prefixes,
+      };
+    });
   },
 
   staleTime: 10_000, // Load new data after 10 seconds

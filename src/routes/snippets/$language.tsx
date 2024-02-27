@@ -1,3 +1,5 @@
+import { readSnippetByLanguage } from '@/api/snippet/read-snippet-by-language';
+import { snippet } from '@/types';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/snippets/$language')({
@@ -6,22 +8,14 @@ export const Route = createFileRoute('/snippets/$language')({
     //   throw notFound();
     // }
 
-    return Promise.all([
-      fetch(`http://localhost:3000/api/v1/snippets/${language}`, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      }),
-    ])
-      .then(([response1]) => Promise.all([response1.json()]))
-      .then(([result1]: [unknown]) => {
+    return readSnippetByLanguage(language).then(
+      (snippets: snippet[] | null) => {
         return {
           selectedLanguage: language,
-          snippets: result1,
+          snippets,
         };
-      });
+      },
+    );
   },
 
   staleTime: 10_000, // Load new data after 10 seconds

@@ -1,3 +1,4 @@
+import { readLanguage } from '@/api/language/read-language';
 import { selectedLangAtom } from '@/state';
 import { language } from '@/types';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
@@ -22,16 +23,9 @@ export default function LanguageFilter() {
   const [languages, setLanguages] = useState<language[] | undefined>(undefined);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/v1/languages`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((result: language[]) => {
-        setLanguages(result);
+    readLanguage()
+      .then((result: language[] | null) => {
+        if (result) setLanguages(result);
         return result;
       })
       .catch(() => {});

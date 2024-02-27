@@ -1,17 +1,11 @@
+import { readPrefix } from '@/api/prefix/read-prefix';
 import Prefixes from '@/components/prefix/Prefixes';
+import { PrefixResponse } from '@/types';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/prefixes/')({
   loader: async () => {
-    return fetch(`http://localhost:3000/api/v1/prefixes`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((result: unknown) => result);
+    return readPrefix().then((result: PrefixResponse[] | null) => result);
   },
 
   staleTime: 10_000, // Load new data after 10 seconds

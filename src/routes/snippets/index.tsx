@@ -1,16 +1,10 @@
+import { readSnippet } from '@/api/snippet/read-snippet';
+import { snippet } from '@/types';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/snippets/')({
   loader: async () => {
-    return fetch(`http://localhost:3000/api/v1/snippets`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((result: unknown) => result);
+    return readSnippet().then((snippets: snippet[] | null) => snippets);
   },
 
   staleTime: 10_000, // Load new data after 10 seconds
