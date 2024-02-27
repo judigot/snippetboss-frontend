@@ -24,10 +24,10 @@ export const Route = createFileRoute('/snippets/$language')({
     return <h1>404</h1>;
   },
 
-  component: Snippets,
+  component: SnippetsRoute,
 });
 
-function Snippets() {
+function SnippetsRoute() {
   const { snippets } = Route.useLoaderData();
 
   return (
