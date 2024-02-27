@@ -1,9 +1,9 @@
 import { readLanguage } from '@/api/language/read-language';
-import { selectedLangAtom } from '@/state';
+import { languagesAtom, selectedLangAtom } from '@/state';
 import { language } from '@/types';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { useAtom } from 'jotai';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 interface URLParameters {
   language: string;
@@ -20,16 +20,24 @@ export default function LanguageFilter() {
 
   const navigate = useNavigate({ from: '/snippets/$language' });
 
-  const [languages, setLanguages] = useState<language[] | undefined>(undefined);
+  const [languages, setLanguages] = useAtom(languagesAtom);
 
   useEffect(() => {
-    readLanguage()
-      .then((result: language[] | null) => {
-        if (result) setLanguages(result);
-        return result;
-      })
-      .catch(() => {});
-  }, []);
+    if (languages === undefined) {
+      readLanguage()
+        .then((result: language[] | null) => {
+          if (result) setLanguages(result);
+          return result;
+        })
+        .catch(() => {});
+    }
+
+    if (URLParams.language) {
+      setSelectedLang(() => {
+        return URLParams.language;
+      });
+    }
+  }, [URLParams.language, languages, setLanguages, setSelectedLang]);
 
   const handleChange = (
     e: React.ChangeEvent<
