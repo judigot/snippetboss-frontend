@@ -1,18 +1,15 @@
-import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import { Outlet, createRootRoute } from '@tanstack/react-router';
 
 import '@/styles/global.css';
+import NavBar from '@/components/NavBar';
+import LanguageFilter from '@/components/language/LanguageFilter';
+import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
 export const Route = createRootRoute({
   component: () => (
     <>
-      <div>
-        <Link to="/snippets">Snippets</Link>
-        <Link to="/prefixes">All Prefixes</Link>
-        {/* <Link to="/snippets">Snippets</Link> */}
-        <Link to="/snippetboss">Snippetboss</Link>
-      </div>
-      <hr />
+      <NavBar />
+      <LanguageFilter />
       <Outlet />
       <TanStackRouterDevtools />
     </>

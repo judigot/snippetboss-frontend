@@ -1,12 +1,22 @@
+import { selectedLangAtom } from '@/state';
 import { language } from '@/types';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
+import { useAtom } from 'jotai';
 import { useState, useEffect } from 'react';
 
-interface Props {
+interface URLParameters {
   language: string;
 }
 
-export default function LanguageFilter({ language }: Props) {
+export default function LanguageFilter() {
+  const routerState = useRouterState();
+  const [selectedLang, setSelectedLang] = useAtom(selectedLangAtom);
+
+  const URLParams: URLParameters = routerState.matches[0]
+    .params as URLParameters;
+
+  const currentPage: string = routerState.location.pathname.split('/')[1];
+
   const navigate = useNavigate({ from: '/snippets/$language' });
 
   const [languages, setLanguages] = useState<language[] | undefined>(undefined);
@@ -34,30 +44,34 @@ export default function LanguageFilter({ language }: Props) {
   ) => {
     const { value } = e.target;
 
-    navigate({
-      to: '/snippets/$language',
-      params: { language: value },
-    }).catch(() => {});
+    setSelectedLang(() => {
+      navigate({
+        to: `/${currentPage}/$language/`,
+        params: { language: value },
+      }).catch(() => {});
+      return value;
+    });
   };
 
   return (
     <form>
       <label htmlFor="selectInput">
-        <select
-          id="selectInput"
-          name="selectInput"
-          value={language}
-          onChange={handleChange}
-          aria-label="Select Dropdown"
-        >
-          <option value="">All languages</option>
-          {languages &&
-            languages?.map(({ language_id, display_name, language_name }) => (
+        {languages && (
+          <select
+            id="selectInput"
+            name="selectInput"
+            value={selectedLang ?? URLParams.language}
+            onChange={handleChange}
+            aria-label="Select Dropdown"
+          >
+            <option value="">All languages</option>
+            {languages?.map(({ language_id, display_name, language_name }) => (
               <option key={language_id} value={language_name}>
                 {display_name}
               </option>
             ))}
-        </select>
+          </select>
+        )}
       </label>
       {languages?.length === 0 && <span>No languages</span>}
     </form>

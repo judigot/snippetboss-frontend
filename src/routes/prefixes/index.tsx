@@ -1,8 +1,9 @@
+import Prefixes from '@/components/prefix/Prefixes';
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/snippets/')({
+export const Route = createFileRoute('/prefixes/')({
   loader: async () => {
-    return fetch(`http://localhost:3000/api/v1/snippets`, {
+    return fetch(`http://localhost:3000/api/v1/prefixes`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -19,15 +20,16 @@ export const Route = createFileRoute('/snippets/')({
     return <h1>404</h1>;
   },
 
-  component: Snippets,
+  component: PrefixesRoute,
 });
 
-function Snippets() {
-  const snippets = Route.useLoaderData();
+function PrefixesRoute() {
+  const prefixes = Route.useLoaderData();
 
   return (
     <>
-      <pre>{JSON.stringify(snippets, null, 4)}</pre>
+      <Prefixes />
+      <pre>{JSON.stringify(prefixes, null, 4)}</pre>
     </>
   );
 }

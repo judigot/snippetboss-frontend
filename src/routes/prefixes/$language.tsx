@@ -1,13 +1,14 @@
+import Prefixes from '@/components/prefix/Prefixes';
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/snippets/$language')({
+export const Route = createFileRoute('/prefixes/$language')({
   loader: async ({ params: { language } }) => {
     // if (language === 'nonexistent') {
     //   throw notFound();
     // }
 
     return Promise.all([
-      fetch(`http://localhost:3000/api/v1/snippets/${language}`, {
+      fetch(`http://localhost:3000/api/v1/prefixes/${language}`, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -19,7 +20,7 @@ export const Route = createFileRoute('/snippets/$language')({
       .then(([result1]: [unknown]) => {
         return {
           selectedLanguage: language,
-          snippets: result1,
+          prefixes: result1,
         };
       });
   },
@@ -30,15 +31,16 @@ export const Route = createFileRoute('/snippets/$language')({
     return <h1>404</h1>;
   },
 
-  component: Snippets,
+  component: PrefixesRoute,
 });
 
-function Snippets() {
-  const { snippets } = Route.useLoaderData();
+function PrefixesRoute() {
+  const { prefixes } = Route.useLoaderData();
 
   return (
     <>
-      <pre>{JSON.stringify(snippets, null, 4)}</pre>
+      <Prefixes />
+      <pre>{JSON.stringify(prefixes, null, 4)}</pre>
     </>
   );
 }
