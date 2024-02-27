@@ -8,11 +8,13 @@ import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 export const Route = createRootRoute({
   component: () => (
     <>
-      <div style={{ textAlign: 'center' }}>
-        <NavBar />
+      <NavBar />
+      <aside className="w-64 text-white p-4">
         <LanguageFilter />
-      </div>
-      <Outlet />
+      </aside>
+      <main className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Outlet />
+      </main>
       <TanStackRouterDevtools />
     </>
   ),
