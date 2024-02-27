@@ -1,34 +1,12 @@
 import { language } from '@/types';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useState, useEffect } from 'react';
 
-export const Route = createFileRoute('/snippets/$language')({
-  loader: async () => {
-    // if (language === 'nonexistent') {
-    //   throw notFound();
-    // }
+interface Props {
+  language: string;
+}
 
-    return fetch(`http://localhost:3000/api/v1/languages`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((result: language[]) => result);
-  },
-
-  staleTime: 10_000, // Load new data after 10 seconds
-
-  notFoundComponent: () => {
-    return <h1>404</h1>;
-  },
-
-  component: LanguageFilter,
-});
-
-export default function LanguageFilter() {
+export default function LanguageFilter({ language }: Props) {
   const navigate = useNavigate({ from: '/snippets/$language' });
 
   const [languages, setLanguages] = useState<language[] | undefined>(undefined);
@@ -48,8 +26,6 @@ export default function LanguageFilter() {
       })
       .catch(() => {});
   }, []);
-
-  const { language } = Route.useParams();
 
   const handleChange = (
     e: React.ChangeEvent<

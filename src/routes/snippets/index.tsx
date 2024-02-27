@@ -20,15 +20,15 @@ export const Route = createFileRoute('/snippets/')({
     return <h1>404</h1>;
   },
 
-  component: About,
+  component: Snippets,
 });
 
-function About() {
+function Snippets() {
   const snippets = Route.useLoaderData();
 
   return (
     <>
-      <LanguageFilter />
+      <LanguageFilter language={'all'} />
       <pre>{JSON.stringify(snippets, null, 4)}</pre>
     </>
   );

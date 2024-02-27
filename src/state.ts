@@ -2,6 +2,8 @@ import { atom } from 'jotai';
 
 import { PrefixResponse, language, snippet_type } from '@/types';
 
+export const selectedLangAtom = atom<string | undefined>(undefined);
+
 export const languagesAtom = atom<language[] | null | undefined>(undefined);
 
 export const prefixesAtom = atom<
