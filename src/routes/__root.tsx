@@ -9,7 +9,9 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <NavBar />
-      <LanguageFilter />
+      <div style={{ textAlign: 'center' }}>
+        <LanguageFilter />
+      </div>
       <Outlet />
       <TanStackRouterDevtools />
     </>
