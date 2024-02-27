@@ -10,7 +10,7 @@ interface URLParameters {
 
 export default function LanguageFilter() {
   const routerState = useRouterState();
-  const [selectedLang, setSelectedLang] = useAtom(selectedLangAtom);
+  const [, setSelectedLang] = useAtom(selectedLangAtom);
 
   const URLParams: URLParameters = routerState.matches[0]
     .params as URLParameters;
@@ -60,7 +60,7 @@ export default function LanguageFilter() {
           <select
             id="selectInput"
             name="selectInput"
-            value={selectedLang ?? URLParams.language}
+            value={URLParams.language ?? ''}
             onChange={handleChange}
             aria-label="Select Dropdown"
           >
