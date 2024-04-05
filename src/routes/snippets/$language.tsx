@@ -48,7 +48,6 @@ function SnippetsRoute() {
       <div className="flex items-center justify-center pb-10">
         <AddSnippetModal
           language={selectedLangData!}
-          closeFormCallback={() => {}}
         />
       </div>
 
