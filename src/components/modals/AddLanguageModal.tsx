@@ -74,7 +74,7 @@ function Modal() {
                   Programming Language
                 </label>
                 <input
-                  placeholder="javascript"
+                  placeholder="e.g. javascript"
                   required
                   type="text"
                   name="language_name"
@@ -92,7 +92,7 @@ function Modal() {
                   Display Name
                 </label>
                 <input
-                  placeholder="JavaScript"
+                  placeholder="e.g. JavaScript"
                   required
                   type="text"
                   name="display_name"
