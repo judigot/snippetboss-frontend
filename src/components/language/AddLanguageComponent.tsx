@@ -34,14 +34,6 @@ export function AddLanguageComponent() {
 
   return (
     <>
-      <button
-        onClick={() => {
-          setIsFormVisible(!isFormVisible);
-        }}
-      >
-        +
-      </button>
-
       {isFormVisible && (
         <section>
           <form
