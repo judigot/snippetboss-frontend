@@ -40,10 +40,7 @@ function NavBar() {
               className="text-white hover:text-blue-300"
               to={`/prefixes${URL}`}
             >
-              All Prefixes
-            </Link>
-            <Link className="text-white hover:text-blue-300" to="/snippetboss">
-              Snippetboss
+              Prefixes
             </Link>
           </div>
         </div>

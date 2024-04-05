@@ -69,10 +69,12 @@ export default function Prefixes({ language }: Props) {
 
   return (
     <section style={{ textAlign: 'center' }}>
-      <h1>{language?.display_name ?? 'All'} Prefixes</h1>
       {prefixData?.map(({ prefix_id, prefix_description, prefix_names }) => (
-        <div key={prefix_id}>
-          <h2>
+        <div className="pb-10" key={prefix_id}>
+          <h2
+            className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-2xl dark:text-white"
+            style={{ textAlign: 'center' }}
+          >
             {
               prefix_names.find((prefix_name) => prefix_name.is_default)
                 ?.prefix_name
