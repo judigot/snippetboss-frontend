@@ -7,7 +7,6 @@ import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-l
 
 interface Props {
   language: language;
-  closeFormCallback: (value: boolean) => void;
 }
 
 const snippetTypeOptions = {
@@ -15,7 +14,7 @@ const snippetTypeOptions = {
   Specific: 2,
 } as const;
 
-function SnippetModal({ language, closeFormCallback }: Props) {
+function SnippetModal({ language }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguageAtom] = useAtom(
     unusedPrefixesByLanguageAtom,
@@ -64,8 +63,11 @@ function SnippetModal({ language, closeFormCallback }: Props) {
             snippet_type_id: Number(formData.snippet_type_id),
           },
           language: language,
-        });
-        closeFormCallback(false);
+        })
+          .then(() => {
+            setIsOpen(false); // Close modal on successful submission
+          })
+          .catch(() => {});
       } catch (error) {
         console.error(error);
       }
