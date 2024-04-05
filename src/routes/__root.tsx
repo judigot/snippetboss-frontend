@@ -8,6 +8,15 @@ import { AddLanguageComponent } from '@/components/language/AddLanguageComponent
 import AddLanguageModal from '@/components/modals/AddLanguageModal';
 
 export const Route = createRootRoute({
+  notFoundComponent: () => {
+    return (
+      <div className="flex items-center justify-center pb-10">
+        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+          Custom 404 (__root.tsx)
+        </h1>
+      </div>
+    );
+  },
   component: () => (
     <>
       <NavBar />
