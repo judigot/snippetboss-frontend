@@ -128,24 +128,19 @@ function Modal() {
                 />
               </div>
 
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  columnGap: '15px',
-                }}
-              >
+              <div className="flex justify-end space-x-3">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-gray-500 text-white font-medium rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Cancel
+                </button>
                 <button
                   type="submit"
                   className="px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
                   Submit
-                </button>
-                <button
-                  className="px-4 py-2 bg-gray-500 text-white font-medium rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Cancel
                 </button>
               </div>
             </form>
