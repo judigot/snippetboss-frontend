@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react'; // Import useRef
 import { createLanguage } from '@/api/language/create-language';
 import { language } from '@/types';
 
@@ -33,7 +33,6 @@ function Modal() {
   const handleBackdropClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
-    // Close only if clicking directly on the backdrop and the form is empty
     if (
       e.target === e.currentTarget &&
       !formData.language_name &&
@@ -42,6 +41,27 @@ function Modal() {
       setIsOpen(false);
     }
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const ESCAPE: boolean = e.key === 'Escape';
+
+    if (formData.language_name === '' && formData.display_name === '') {
+      if (ESCAPE) {
+        setIsOpen(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      // Set focus on the language_name input when the modal opens
+      // Use setTimeout to ensure the element is in the DOM and visible
+      const inputElement = document.querySelector(
+        '#language_name',
+      ) as HTMLInputElement;
+      if (inputElement) inputElement.focus();
+    }
+  }, [isOpen]); // Dependencies
 
   return (
     <>
@@ -74,6 +94,9 @@ function Modal() {
                   Programming Language
                 </label>
                 <input
+                  onKeyDown={(e) => {
+                    handleKeyDown(e);
+                  }}
                   placeholder="e.g. javascript"
                   required
                   type="text"
@@ -92,6 +115,9 @@ function Modal() {
                   Display Name
                 </label>
                 <input
+                  onKeyDown={(e) => {
+                    handleKeyDown(e);
+                  }}
                   placeholder="e.g. JavaScript"
                   required
                   type="text"
@@ -102,20 +128,27 @@ function Modal() {
                 />
               </div>
 
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  columnGap: '15px',
+                }}
               >
-                Submit
-              </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                  Submit
+                </button>
+                <button
+                  className="px-4 py-2 bg-gray-500 text-white font-medium rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
-
-            <button
-              className="mt-4 px-4 py-2 bg-red-500 text-white font-medium rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-              onClick={() => setIsOpen(false)}
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
