@@ -55,7 +55,7 @@ function SnippetsRoute() {
       {snippets?.map((snippet) => (
         <div key={snippet.snippet_id}>
           {snippet.snippet_content !== null && (
-            <div className="pb-80">
+            <div className="pb-10">
               <SnippetViewer snippet={snippet} />
             </div>
           )}
