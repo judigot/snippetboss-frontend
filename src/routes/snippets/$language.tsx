@@ -1,4 +1,5 @@
 import { readSnippetByLanguage } from '@/api/snippet/read-snippet-by-language';
+import AddSnippetModal from '@/components/modals/AddSnippetModal';
 import { SnippetViewer } from '@/components/snippet/CodeEditor';
 import { languagesAtom } from '@/state';
 import { SnippetResponse } from '@/types';
@@ -31,18 +32,24 @@ export const Route = createFileRoute('/snippets/$language')({
 });
 
 function SnippetsRoute() {
-  const [selectedLang] = useAtom(languagesAtom);
+  const [languages] = useAtom(languagesAtom);
   const { snippets, selectedLanguage } = Route.useLoaderData();
+  const selectedLangData =
+    languages &&
+    languages.find((lang) => lang.language_name === selectedLanguage);
 
   return (
     <>
-      <div className="flex items-center justify-center pb-10">
+      <div className="flex items-center justify-center">
         <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-          {selectedLang &&
-            selectedLang.find((lang) => lang.language_name === selectedLanguage)
-              ?.display_name}{' '}
-          Snippets
+          {selectedLangData?.display_name}&nbsp;Snippets
         </h1>
+      </div>
+      <div className="flex items-center justify-center pb-10">
+        <AddSnippetModal
+          language={selectedLangData!}
+          closeFormCallback={() => {}}
+        />
       </div>
 
       {snippets?.map((snippet) => (
