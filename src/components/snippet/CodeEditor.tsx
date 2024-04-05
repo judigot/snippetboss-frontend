@@ -114,7 +114,10 @@ export const SnippetViewer = ({ snippet }: { snippet: SnippetResponse }) => {
 
   return (
     <>
-      <h2 style={{ textAlign: 'center' }}>
+      <h2
+        className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-2xl dark:text-white"
+        style={{ textAlign: 'center' }}
+      >
         {
           snippet.prefix_names.find((prefix_name) => prefix_name.is_default)
             ?.prefix_name

@@ -1,10 +1,11 @@
 import { readSnippet } from '@/api/snippet/read-snippet';
-import { snippet } from '@/types';
+import { SnippetViewer } from '@/components/snippet/CodeEditor';
+import { SnippetResponse } from '@/types';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/snippets/')({
   loader: async () => {
-    return readSnippet().then((snippets: snippet[] | null) => snippets);
+    return readSnippet().then((snippets: SnippetResponse[] | null) => snippets);
   },
 
   staleTime: 10_000, // Load new data after 10 seconds
@@ -21,7 +22,21 @@ function SnippetsRoute() {
 
   return (
     <>
-      <pre>{JSON.stringify(snippets, null, 4)}</pre>
+      <div className="flex items-center justify-center pb-10">
+        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+          All Snippets
+        </h1>
+      </div>
+
+      {snippets?.map((snippet) => (
+        <div key={snippet.snippet_id}>
+          {snippet.snippet_content !== null && (
+            <div className="pb-10">
+              <SnippetViewer snippet={snippet} />
+            </div>
+          )}
+        </div>
+      ))}
     </>
   );
 }
