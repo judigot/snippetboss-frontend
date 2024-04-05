@@ -78,7 +78,16 @@ function SnippetModal({ language }: Props) {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
     if (e.target === e.currentTarget) {
-      setIsOpen(false);
+      // Check if any form field is filled
+      const isFormFilled =
+        formData.snippet_content !== '' ||
+        formData.prefix_id !== '' ||
+        formData.snippet_type_id !== '';
+
+      // Only close the modal if no form fields are filled
+      if (!isFormFilled) {
+        setIsOpen(false);
+      }
     }
   };
 
@@ -100,7 +109,21 @@ function SnippetModal({ language }: Props) {
           <div
             onClick={(e) => e.stopPropagation()}
             className="bg-stone-900 p-8 rounded-lg shadow-lg max-w-md w-full space-y-4"
-            onKeyDown={(e) => e.key === 'Escape' && setIsOpen(false)}
+            onKeyDown={(e) => {
+              // Check if the Escape key was pressed
+              if (e.key === 'Escape') {
+                // Check if any form field is filled
+                const isFormFilled =
+                  formData.snippet_content !== '' ||
+                  formData.prefix_id !== '' ||
+                  formData.snippet_type_id !== '';
+
+                // Only close the modal if no form fields are filled
+                if (!isFormFilled) {
+                  setIsOpen(false);
+                }
+              }
+            }}
           >
             <h1 className="text-xl font-bold text-white">
               Add {language.display_name} Snippet
