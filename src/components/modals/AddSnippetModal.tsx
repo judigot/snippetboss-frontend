@@ -126,7 +126,7 @@ function SnippetModal({ language }: Props) {
             }}
           >
             <h1 className="text-xl font-bold text-white">
-              Add {language.display_name} Snippet
+              Add {language.display_name} snippet
             </h1>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1">
