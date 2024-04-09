@@ -78,13 +78,18 @@ export default function Prefixes({ language }: Props) {
             {
               prefix_names.find((prefix_name) => prefix_name.is_default)
                 ?.prefix_name
-            }{' '}
-            (
-            {prefix_names
-              .filter((prefix_name) => !prefix_name.is_default)
-              .map((prefix_name) => prefix_name.prefix_name)
-              .join(', ')}
-            )
+            }
+            &nbsp;
+            {prefix_names.length > 1 && (
+              <>
+                (
+                {prefix_names
+                  .filter((prefix_name) => !prefix_name.is_default)
+                  .map((prefix_name) => prefix_name.prefix_name)
+                  .join(', ')}
+                )
+              </>
+            )}
           </h2>
           <p>{prefix_description}</p>
         </div>
