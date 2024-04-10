@@ -138,7 +138,6 @@ const MultiWordInput = ({
   setPrefixNames: Dispatch<SetStateAction<string[]>>;
 }) => {
   const [inputValue, setInputValue] = useState('');
-  // const [words, setWords] = useState<string[]>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
