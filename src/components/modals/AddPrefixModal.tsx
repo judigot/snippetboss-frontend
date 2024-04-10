@@ -8,11 +8,11 @@ import React, {
 } from 'react'; // Now including useRef
 import { PrefixRequestBody, createPrefix } from '@/api/prefix/create-prefix'; // Ensure this API function is correctly implemented
 
+interface PrefixForm extends PrefixRequestBody {}
+
 function Modal() {
   const [isOpen, setIsOpen] = useState(false);
   const [prefixNames, setPrefixNames] = useState<string[]>([]);
-
-  interface PrefixForm extends PrefixRequestBody {}
 
   const [formData, setFormData] = useState<PrefixForm>({
     prefix_description: '',
