@@ -1,18 +1,10 @@
-import React, {
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'; // Now including useRef
+import React, { FormEvent, useEffect, useRef, useState } from 'react'; // Now including useRef
 import { PrefixRequestBody, createPrefix } from '@/api/prefix/create-prefix'; // Ensure this API function is correctly implemented
 
 interface PrefixForm extends PrefixRequestBody {}
 
 function Modal() {
   const [isOpen, setIsOpen] = useState(false);
-  const [prefixNames, setPrefixNames] = useState<string[]>([]);
 
   const [formData, setFormData] = useState<PrefixForm>({
     prefix_description: '',
@@ -27,22 +19,26 @@ function Modal() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleStateChangeInParent: (
+    newPrefixName: PrefixForm['prefix_names'],
+  ) => void = (newPrefixName: PrefixForm['prefix_names']) => {
+    setFormData((prevFormData) => {
+      return {
+        ...prevFormData,
+        prefix_names: newPrefixName,
+      };
+    });
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { prefix_description } = formData;
+    const { prefix_description, prefix_names } = formData;
 
-    const modifiedPrefixNames: PrefixRequestBody['prefix_names'] =
-      prefixNames.map((prefix_name, index) => ({
-        prefix_name,
-        is_default: index === 0, // Mark the first prefix as default
-      })) as unknown as PrefixRequestBody['prefix_names'];
-
-    if (prefix_description && prefixNames.length > 0) {
+    if (prefix_description && prefix_names.length > 0) {
       const dataToSend: PrefixRequestBody = {
         prefix_description,
-        prefix_names: modifiedPrefixNames,
+        prefix_names,
       };
-
       try {
         await createPrefix(dataToSend); // Adjust this call to your actual API function for creating a prefix
         setIsOpen(false); // Close modal on successful submission
@@ -102,8 +98,8 @@ function Modal() {
                   onChange={handleInputChange}
                 />
                 <MultiWordInput
-                  prefixNames={prefixNames}
-                  setPrefixNames={setPrefixNames}
+                  // prefixNames={formData.prefix_names}
+                  addPrefixNameCallback={handleStateChangeInParent}
                 />
               </div>
 
@@ -131,13 +127,16 @@ function Modal() {
 }
 
 const MultiWordInput = ({
-  prefixNames,
-  setPrefixNames,
+  // prefixNames,
+  addPrefixNameCallback,
 }: {
-  prefixNames: string[];
-  setPrefixNames: Dispatch<SetStateAction<string[]>>;
+  // prefixNames: PrefixForm['prefix_names'];
+  addPrefixNameCallback: (newPrefixName: PrefixForm['prefix_names']) => void;
 }) => {
   const [inputValue, setInputValue] = useState('');
+  const [prefixNames, setPrefixNames] = useState<PrefixForm['prefix_names']>(
+    [],
+  );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -146,14 +145,33 @@ const MultiWordInput = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // When the user presses Enter, add the current input value to the words array
     if ((e.key === 'Enter' || e.key === 'Tab') && inputValue.trim() !== '') {
-      e.preventDefault(); // Prevent form submission
-      setPrefixNames([...prefixNames, inputValue.trim()]);
-      setInputValue(''); // Clear the input field
+      e.preventDefault();
+
+      if (!prefixNames.some((item) => item.prefix_name === inputValue.trim())) {
+        const prefixNamesMutated = prefixNames;
+        prefixNamesMutated.push({
+          is_default: prefixNamesMutated.length === 0 ? true : false,
+          prefix_name: inputValue.trim(),
+        });
+
+        setPrefixNames(() => {
+          addPrefixNameCallback(prefixNamesMutated);
+          return prefixNamesMutated;
+        });
+
+        setInputValue(''); // Clear the input field
+      }
     }
   };
 
-  const removeWord = (index: number) => {
-    setPrefixNames(prefixNames.filter((_, i) => i !== index));
+  const removeWord = (prefixName: string) => {
+    const prefixNamesMutated = prefixNames.filter(
+      (item) => item.prefix_name !== prefixName,
+    );
+    setPrefixNames(() => {
+      addPrefixNameCallback(prefixNamesMutated);
+      return prefixNamesMutated;
+    });
   };
 
   return (
@@ -171,9 +189,9 @@ const MultiWordInput = ({
           key={index}
           className="flex items-center bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full"
         >
-          {word}
+          {word.prefix_name}
           <button
-            onClick={() => removeWord(index)}
+            onClick={() => removeWord(word.prefix_name)}
             className="bg-blue-200 ml-2 rounded-full p-1 hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
           >
             &times;
