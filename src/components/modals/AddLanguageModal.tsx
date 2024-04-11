@@ -73,6 +73,7 @@ function Modal() {
       >
         +
       </button>
+
       {isOpen && (
         <div
           onClick={handleBackdropClick}
