@@ -5,7 +5,7 @@ import { useAtom } from 'jotai';
 
 interface PrefixForm extends PrefixRequestBody {}
 
-function Modal() {
+function AddPrefixModal() {
   const [isOpen, setIsOpen] = useAtom(isAddPrefixModalVisibleAtom);
 
   const [prefixNameInputValue, setPrefixNameInputValue] = useState('');
@@ -223,4 +223,4 @@ function Modal() {
   );
 }
 
-export default Modal;
+export default AddPrefixModal;

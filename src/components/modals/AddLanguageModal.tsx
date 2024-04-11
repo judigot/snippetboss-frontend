@@ -4,7 +4,7 @@ import { language } from '@/types';
 import { isAddLanguageModalVisibleAtom } from '@/state';
 import { useAtom } from 'jotai';
 
-function Modal() {
+function AddLanguageModal() {
   const [isOpen, setIsOpen] = useAtom(isAddLanguageModalVisibleAtom);
 
   interface LanguageForm extends Omit<language, 'language_id'> {}
@@ -153,4 +153,4 @@ function Modal() {
   );
 }
 
-export default Modal;
+export default AddLanguageModal;

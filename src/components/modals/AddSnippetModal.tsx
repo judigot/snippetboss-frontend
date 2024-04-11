@@ -18,7 +18,7 @@ const snippetTypeOptions = {
   Specific: 2,
 } as const;
 
-function SnippetModal({ language }: Props) {
+function AddSnippetModal({ language }: Props) {
   const [isOpen, setIsOpen] = useAtom(isAddSnippetModalVisibleAtom);
   const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguageAtom] = useAtom(
     unusedPrefixesByLanguageAtom,
@@ -248,4 +248,4 @@ function SnippetModal({ language }: Props) {
   );
 }
 
-export default SnippetModal;
+export default AddSnippetModal;
