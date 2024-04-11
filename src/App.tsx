@@ -1,4 +1,3 @@
-import { AddLanguageComponent } from '@/components/language/AddLanguageComponent';
 import LanguageFilter from '@/components/language/LanguageFilter';
 import AddLanguageModal from '@/components/modals/AddLanguageModal';
 
@@ -14,7 +13,6 @@ function App({}: Props) {
     >
       <LanguageFilter />
       <AddLanguageModal />
-      <AddLanguageComponent />
     </div>
   );
 }
