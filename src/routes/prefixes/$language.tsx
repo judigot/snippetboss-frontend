@@ -1,7 +1,10 @@
 import { readPrefixByLanguage } from '@/api/prefix/read-prefix-by-language';
-import AddPrefixModal from '@/components/modals/AddPrefixModal';
 import Prefixes from '@/components/prefix/Prefixes';
-import { languagesAtom, selectedLangAtom } from '@/state';
+import {
+  isAddPrefixModalVisibleAtom,
+  languagesAtom,
+  selectedLangAtom,
+} from '@/state';
 import { PrefixResponse } from '@/types';
 import { createFileRoute } from '@tanstack/react-router';
 import { useAtom } from 'jotai';
@@ -35,6 +38,8 @@ function PrefixesRoute() {
   const [languages] = useAtom(languagesAtom);
   const [selectedLang] = useAtom(selectedLangAtom);
 
+  const [, setIsAddPrefixModalVisible] = useAtom(isAddPrefixModalVisibleAtom);
+
   const selectedLangData = languages?.find((language) => {
     return language.language_name === selectedLang;
   });
@@ -46,9 +51,16 @@ function PrefixesRoute() {
           {selectedLangData?.display_name} Prefixes
         </h1>
       </div>
+
       <div className="flex items-center justify-center pb-10">
-        <AddPrefixModal />
+        <button
+          className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+          onClick={() => setIsAddPrefixModalVisible(true)}
+        >
+          Add prefix
+        </button>
       </div>
+
       <Prefixes language={selectedLangData} />
     </>
   );

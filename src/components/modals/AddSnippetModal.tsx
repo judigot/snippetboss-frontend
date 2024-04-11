@@ -1,6 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { createSnippet } from '@/api/snippet/create-snippet';
 import {
+  isAddPrefixModalVisibleAtom,
   isAddSnippetModalVisibleAtom,
   languagesAtom,
   selectedLangAtom,
@@ -8,7 +9,6 @@ import {
 } from '@/state';
 import { useAtom } from 'jotai';
 import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
-import AddPrefixModal from '@/components/modals/AddPrefixModal';
 
 interface Props {}
 
@@ -26,7 +26,7 @@ function AddSnippetModal({}: Props) {
   )!;
 
   const [isOpen, setIsOpen] = useAtom(isAddSnippetModalVisibleAtom);
-  const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguageAtom] = useAtom(
+  const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguage] = useAtom(
     unusedPrefixesByLanguageAtom,
   );
   const prefixOptions = unusedPrefixesByLanguage?.[language.language_name];
@@ -37,8 +37,15 @@ function AddSnippetModal({}: Props) {
     snippet_content: '',
   });
 
+  const [, setIsAddPrefixModalVisible] = useAtom(isAddPrefixModalVisibleAtom);
+
   useEffect(() => {
     if (isOpen) {
+      setFormData({
+        prefix_id: '',
+        snippet_type_id: '',
+        snippet_content: '',
+      });
       const textareaElement = document.getElementById(
         'snippet_content',
       ) as HTMLTextAreaElement | null;
@@ -103,13 +110,6 @@ function AddSnippetModal({}: Props) {
 
   return (
     <>
-      <button
-        className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700 transition-colors duration-150"
-        onClick={() => setIsOpen(true)}
-      >
-        Add snippet
-      </button>
-
       {isOpen && (
         <div
           onClick={handleBackdropClick}
@@ -174,7 +174,7 @@ function AddSnippetModal({}: Props) {
                         .then((result) => {
                           if (result) {
                             /* Dynamically set a property on `setUnusedPrefixesByLanguageAtom` using `language_name` */
-                            setUnusedPrefixesByLanguageAtom({
+                            setUnusedPrefixesByLanguage({
                               [language.language_name]: result,
                             });
                           }
@@ -205,7 +205,14 @@ function AddSnippetModal({}: Props) {
 
               <div className="flex justify-center">or</div>
               <div className="flex justify-center">
-                <AddPrefixModal />
+                <div className="flex items-center justify-center">
+                  <button
+                    className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+                    onClick={() => setIsAddPrefixModalVisible(true)}
+                  >
+                    Add prefix
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-1">

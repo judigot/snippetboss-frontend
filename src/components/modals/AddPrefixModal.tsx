@@ -1,12 +1,19 @@
 import React, { FormEvent, useEffect, useRef, useState } from 'react'; // Now including useRef
 import { PrefixRequestBody, createPrefix } from '@/api/prefix/create-prefix'; // Ensure this API function is correctly implemented
-import { isAddPrefixModalVisibleAtom } from '@/state';
+import {
+  isAddPrefixModalVisibleAtom,
+  selectedLangAtom,
+  unusedPrefixesByLanguageAtom,
+} from '@/state';
 import { useAtom } from 'jotai';
+import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
 
 interface PrefixForm extends PrefixRequestBody {}
 
 function AddPrefixModal() {
   const [isOpen, setIsOpen] = useAtom(isAddPrefixModalVisibleAtom);
+  const [selectedLang] = useAtom(selectedLangAtom);
+  const [, setUnusedPrefixesByLanguage] = useAtom(unusedPrefixesByLanguageAtom);
 
   const [prefixNameInputValue, setPrefixNameInputValue] = useState('');
 
@@ -89,6 +96,18 @@ function AddPrefixModal() {
     if (prefix_description && prefix_names.length > 0) {
       try {
         await createPrefix(formData);
+
+        if (selectedLang) {
+          readPrefixUnusedByLanguage(selectedLang)
+            .then((result) => {
+              if (result) {
+                setUnusedPrefixesByLanguage({
+                  [selectedLang]: result,
+                });
+              }
+            })
+            .catch(() => {});
+        }
         setIsOpen(false);
       } catch (error) {
         console.error('Error creating prefix:', error);
@@ -126,13 +145,6 @@ function AddPrefixModal() {
 
   return (
     <>
-      <button
-        className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
-        onClick={() => setIsOpen(true)}
-      >
-        Add prefix
-      </button>
-
       {isOpen && (
         <div
           onClick={handleBackdropClick}

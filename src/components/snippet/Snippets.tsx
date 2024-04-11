@@ -17,7 +17,7 @@ export default function CodeEditor({ language }: Props) {
 
   const [snippets, setSnippets] = useState<SnippetResponse[] | null>([]);
 
-  const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguageAtom] = useAtom(
+  const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguage] = useAtom(
     unusedPrefixesByLanguageAtom,
   );
 
@@ -63,7 +63,7 @@ export default function CodeEditor({ language }: Props) {
                     .then((result) => {
                       if (result) {
                         /* Dynamically set a property on `setUnusedPrefixesByLanguageAtom` using `language_name` */
-                        setUnusedPrefixesByLanguageAtom({
+                        setUnusedPrefixesByLanguage({
                           [language_name]: result,
                         });
                       }

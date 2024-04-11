@@ -132,7 +132,6 @@ export default function Languages() {
             </button>
           ))}
         {!languages && <span>No languages</span>}
-        <AddLanguageComponent />
       </section>
       <hr />
       <div style={{ textAlign: 'center' }}>

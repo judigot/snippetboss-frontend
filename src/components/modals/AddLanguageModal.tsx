@@ -56,6 +56,10 @@ function AddLanguageModal() {
 
   useEffect(() => {
     if (isOpen) {
+      setFormData({
+        language_name: '',
+        display_name: '',
+      });
       // Set focus on the language_name input when the modal opens
       // Use setTimeout to ensure the element is in the DOM and visible
       const inputElement = document.querySelector(
@@ -67,13 +71,6 @@ function AddLanguageModal() {
 
   return (
     <>
-      <button
-        className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
-        onClick={() => setIsOpen(true)}
-      >
-        +
-      </button>
-
       {isOpen && (
         <div
           onClick={handleBackdropClick}

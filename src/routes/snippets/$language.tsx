@@ -1,7 +1,6 @@
 import { readSnippetByLanguage } from '@/api/snippet/read-snippet-by-language';
-import AddSnippetModal from '@/components/modals/AddSnippetModal';
 import { SnippetViewer } from '@/components/snippet/CodeEditor';
-import { languagesAtom } from '@/state';
+import { isAddSnippetModalVisibleAtom, languagesAtom } from '@/state';
 import { SnippetResponse } from '@/types';
 import { createFileRoute } from '@tanstack/react-router';
 import { useAtom } from 'jotai';
@@ -38,6 +37,8 @@ function SnippetsRoute() {
     languages &&
     languages.find((lang) => lang.language_name === selectedLanguage);
 
+  const [, setIsAddSnippetModalVisible] = useAtom(isAddSnippetModalVisibleAtom);
+
   return (
     <>
       <div className="flex items-center justify-center">
@@ -46,9 +47,12 @@ function SnippetsRoute() {
         </h1>
       </div>
       <div className="flex items-center justify-center pb-10">
-        <AddSnippetModal
-          language={selectedLangData!}
-        />
+        <button
+          className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700 transition-colors duration-150"
+          onClick={() => setIsAddSnippetModalVisible(true)}
+        >
+          Add snippet
+        </button>
       </div>
 
       {snippets?.map((snippet) => (
