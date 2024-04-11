@@ -1,9 +1,13 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { createSnippet } from '@/api/snippet/create-snippet';
-import { unusedPrefixesByLanguageAtom } from '@/state';
+import {
+  isAddSnippetModalVisibleAtom,
+  unusedPrefixesByLanguageAtom,
+} from '@/state';
 import { language } from '@/types';
 import { useAtom } from 'jotai';
 import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
+import AddPrefixModal from '@/components/modals/AddPrefixModal';
 
 interface Props {
   language: language;
@@ -15,7 +19,7 @@ const snippetTypeOptions = {
 } as const;
 
 function SnippetModal({ language }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useAtom(isAddSnippetModalVisibleAtom);
   const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguageAtom] = useAtom(
     unusedPrefixesByLanguageAtom,
   );
@@ -191,6 +195,11 @@ function SnippetModal({ language }: Props) {
                       ),
                     )}
                 </select>
+              </div>
+
+              <div className="flex justify-center">or</div>
+              <div className="flex justify-center">
+                <AddPrefixModal />
               </div>
 
               <div className="space-y-1">

@@ -1,9 +1,11 @@
 import React, { FormEvent, useEffect, useState } from 'react'; // Import useRef
 import { createLanguage } from '@/api/language/create-language';
 import { language } from '@/types';
+import { isAddLanguageModalVisibleAtom } from '@/state';
+import { useAtom } from 'jotai';
 
 function Modal() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useAtom(isAddLanguageModalVisibleAtom);
 
   interface LanguageForm extends Omit<language, 'language_id'> {}
 
@@ -71,7 +73,6 @@ function Modal() {
       >
         +
       </button>
-
       {isOpen && (
         <div
           onClick={handleBackdropClick}

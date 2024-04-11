@@ -1,10 +1,12 @@
 import React, { FormEvent, useEffect, useRef, useState } from 'react'; // Now including useRef
 import { PrefixRequestBody, createPrefix } from '@/api/prefix/create-prefix'; // Ensure this API function is correctly implemented
+import { isAddPrefixModalVisibleAtom } from '@/state';
+import { useAtom } from 'jotai';
 
 interface PrefixForm extends PrefixRequestBody {}
 
 function Modal() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useAtom(isAddPrefixModalVisibleAtom);
 
   const [prefixNameInputValue, setPrefixNameInputValue] = useState('');
 
