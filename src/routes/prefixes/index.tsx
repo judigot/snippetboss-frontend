@@ -1,8 +1,9 @@
 import { readPrefix } from '@/api/prefix/read-prefix';
-import AddPrefixModal from '@/components/modals/AddPrefixModal';
 import Prefixes from '@/components/prefix/Prefixes';
+import { isAddPrefixModalVisibleAtom } from '@/state';
 import { PrefixResponse } from '@/types';
 import { createFileRoute } from '@tanstack/react-router';
+import { useAtom } from 'jotai';
 
 export const Route = createFileRoute('/prefixes/')({
   loader: async () => {
@@ -22,7 +23,8 @@ export const Route = createFileRoute('/prefixes/')({
 });
 
 function PrefixesRoute() {
-  // const prefixes = Route.useLoaderData();
+  const prefixes: PrefixResponse[] = Route.useLoaderData();
+  const [, setIsAddPrefixModalVisible] = useAtom(isAddPrefixModalVisibleAtom);
 
   return (
     <>
@@ -32,9 +34,14 @@ function PrefixesRoute() {
         </h1>
       </div>
       <div className="flex items-center justify-center pb-10">
-        <AddPrefixModal />
+        <button
+          className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+          onClick={() => setIsAddPrefixModalVisible(true)}
+        >
+          Add prefix
+        </button>
       </div>
-      <Prefixes />
+      <Prefixes prefixes={prefixes} />
     </>
   );
 }

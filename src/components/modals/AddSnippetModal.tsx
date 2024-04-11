@@ -29,7 +29,7 @@ function AddSnippetModal({}: Props) {
   const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguage] = useAtom(
     unusedPrefixesByLanguageAtom,
   );
-  const prefixOptions = unusedPrefixesByLanguage?.[language.language_name];
+  const prefixOptions = unusedPrefixesByLanguage?.[language?.language_name];
 
   const [formData, setFormData] = useState({
     prefix_id: '',

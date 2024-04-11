@@ -9,6 +9,11 @@ import { PrefixResponse } from '@/types';
 import { createFileRoute } from '@tanstack/react-router';
 import { useAtom } from 'jotai';
 
+export interface LoaderDataType {
+  selectedLanguage: string;
+  prefixes: PrefixResponse[];
+}
+
 export const Route = createFileRoute('/prefixes/$language')({
   loader: async ({ params: { language } }) => {
     // if (language === 'nonexistent') {
@@ -35,7 +40,10 @@ export const Route = createFileRoute('/prefixes/$language')({
 });
 
 function PrefixesRoute() {
+  const prefixes: LoaderDataType = Route.useLoaderData();
+
   const [languages] = useAtom(languagesAtom);
+
   const [selectedLang] = useAtom(selectedLangAtom);
 
   const [, setIsAddPrefixModalVisible] = useAtom(isAddPrefixModalVisibleAtom);
@@ -61,7 +69,7 @@ function PrefixesRoute() {
         </button>
       </div>
 
-      <Prefixes language={selectedLangData} />
+      <Prefixes prefixes={prefixes.prefixes} />
     </>
   );
 }
