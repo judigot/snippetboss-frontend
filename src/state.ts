@@ -17,3 +17,7 @@ export const unusedPrefixesByLanguageAtom = atom<
 export const snippetTypesAtom = atom<snippet_type[] | null | undefined>(
   undefined,
 );
+
+export const isAddLanguageModalVisibleAtom = atom<boolean>(false);
+export const isAddPrefixModalVisibleAtom = atom<boolean>(false);
+export const isAddSnippetModalVisibleAtom = atom<boolean>(false);
