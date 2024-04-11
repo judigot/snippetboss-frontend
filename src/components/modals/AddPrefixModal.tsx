@@ -179,21 +179,23 @@ function Modal() {
                   placeholder="e.g. varString"
                   className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
-                {formData.prefix_names.map((word, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full"
-                  >
-                    {word.prefix_name}
-                    <button
-                      type="button"
-                      onClick={() => removeWord(word.prefix_name)}
-                      className="bg-blue-200 ml-2 rounded-full p-1 hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                <div className="">
+                  {formData.prefix_names.map((word, index) => (
+                    <div
+                      key={index}
+                      className="inline-flex mt-5 m-1 items-center bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full"
                     >
-                      &times;
-                    </button>
-                  </div>
-                ))}
+                      {word.prefix_name}
+                      <button
+                        type="button"
+                        onClick={() => removeWord(word.prefix_name)}
+                        className="bg-blue-200 ml-2 rounded-full p-1 hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className="flex justify-end space-x-3">
