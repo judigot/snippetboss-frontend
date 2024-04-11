@@ -1,4 +1,5 @@
 import { readPrefixByLanguage } from '@/api/prefix/read-prefix-by-language';
+import AddPrefixModal from '@/components/modals/AddPrefixModal';
 import Prefixes from '@/components/prefix/Prefixes';
 import { languagesAtom, selectedLangAtom } from '@/state';
 import { PrefixResponse } from '@/types';
@@ -40,10 +41,13 @@ function PrefixesRoute() {
 
   return (
     <>
-      <div className="flex items-center justify-center pb-10">
+      <div className="flex items-center justify-center">
         <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
           {selectedLangData?.display_name} Prefixes
         </h1>
+      </div>
+      <div className="flex items-center justify-center pb-10">
+        <AddPrefixModal />
       </div>
       <Prefixes language={selectedLangData} />
     </>
