@@ -2,23 +2,29 @@ import { useState, useEffect, FormEvent } from 'react';
 import { createSnippet } from '@/api/snippet/create-snippet';
 import {
   isAddSnippetModalVisibleAtom,
+  languagesAtom,
+  selectedLangAtom,
   unusedPrefixesByLanguageAtom,
 } from '@/state';
-import { language } from '@/types';
 import { useAtom } from 'jotai';
 import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
 import AddPrefixModal from '@/components/modals/AddPrefixModal';
 
-interface Props {
-  language: language;
-}
+interface Props {}
 
 const snippetTypeOptions = {
   Global: 1,
   Specific: 2,
 } as const;
 
-function AddSnippetModal({ language }: Props) {
+function AddSnippetModal({}: Props) {
+  const [selectedLang] = useAtom(selectedLangAtom);
+  const [languages] = useAtom(languagesAtom);
+
+  const language = languages?.find(
+    (language) => language.language_name === selectedLang,
+  )!;
+
   const [isOpen, setIsOpen] = useAtom(isAddSnippetModalVisibleAtom);
   const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguageAtom] = useAtom(
     unusedPrefixesByLanguageAtom,
