@@ -171,6 +171,8 @@ function Modal() {
                 </label>
                 <input
                   type="text"
+                  name="prefix_names"
+                  id="prefix_names"
                   value={prefixNameInputValue}
                   onChange={handleInputChange}
                   onKeyDown={handleKeyDown}
