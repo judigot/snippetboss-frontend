@@ -56,7 +56,7 @@ export default function LanguageFilter() {
   };
 
   return (
-    <form className="max-w-sm mx-auto">
+    <section className="max-w-sm mx-auto">
       <label htmlFor="selectInput">
         {languages && (
           <select
@@ -77,6 +77,6 @@ export default function LanguageFilter() {
         )}
       </label>
       {languages?.length === 0 && <span>No languages</span>}
-    </form>
+    </section>
   );
 }
