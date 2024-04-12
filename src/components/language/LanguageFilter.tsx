@@ -51,7 +51,7 @@ export default function LanguageFilter() {
         to: `/${currentPage}/$language/`,
         params: { language: value },
       }).catch(() => {});
-      return value;
+      return value !== '' ? value : undefined;
     });
   };
 
