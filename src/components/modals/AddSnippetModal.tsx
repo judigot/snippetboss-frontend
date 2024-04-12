@@ -63,11 +63,9 @@ function AddSnippetModal({}: Props) {
       });
     }
 
-    const textareaElement = document.getElementById(
-      'snippet_content',
-    ) as HTMLTextAreaElement | null;
-
-    if (textareaElement) textareaElement.focus();
+    (
+      document.querySelector('#snippet_content') as HTMLTextAreaElement | null
+    )?.focus();
   }, []);
 
   const handleChange = (
