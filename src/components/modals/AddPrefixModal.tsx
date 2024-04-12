@@ -93,9 +93,28 @@ function AddPrefixModal() {
     e.preventDefault();
     const { prefix_description, prefix_names } = formData;
 
-    if (prefix_description && prefix_names.length > 0) {
+    const isThereSelectedPrefixNames: boolean = prefix_names.length > 0;
+
+    if (
+      prefix_description &&
+      (prefixNameInputValue.trim() || isThereSelectedPrefixNames)
+    ) {
       try {
-        await createPrefix(formData);
+        if (prefixNameInputValue.trim() && !isThereSelectedPrefixNames) {
+          await createPrefix({
+            prefix_description: formData.prefix_description,
+            prefix_names: [
+              {
+                is_default: true,
+                prefix_name: prefixNameInputValue.trim(),
+              },
+            ],
+          });
+        }
+
+        if (isThereSelectedPrefixNames) {
+          await createPrefix(formData);
+        }
 
         if (selectedLang) {
           readPrefixUnusedByLanguage(selectedLang)
