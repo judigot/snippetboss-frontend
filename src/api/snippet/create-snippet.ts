@@ -3,7 +3,7 @@ import { language, snippet } from '@/types';
 
 interface Body {
   snippet: Omit<snippet, 'snippet_id'>;
-  language: language;
+  language: language[];
 }
 
 export const createSnippet = async (

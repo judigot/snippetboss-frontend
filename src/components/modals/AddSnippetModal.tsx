@@ -85,8 +85,14 @@ function AddSnippetModal({}: Props) {
     if (
       formData.snippet_content &&
       formData.prefix_id &&
+      snippetLanguages.length > 0 &&
       formData.snippet_type_id
     ) {
+      const filteredLanguages =
+        languages?.filter((language) =>
+          snippetLanguages.includes(language.language_name),
+        ) || [];
+
       try {
         createSnippet({
           snippet: {
@@ -94,7 +100,7 @@ function AddSnippetModal({}: Props) {
             prefix_id: Number(formData.prefix_id),
             snippet_type_id: Number(formData.snippet_type_id),
           },
-          language: language,
+          language: filteredLanguages,
         })
           .then(() => {
             setIsOpen(false); // Close modal on successful submission
@@ -234,7 +240,9 @@ function AddSnippetModal({}: Props) {
               <TagInput
                 placeholder="Enter tags"
                 values={snippetLanguages}
-                suggestions={['JudeScript']}
+                suggestions={languages?.map(
+                  (language) => language.language_name,
+                )}
                 onChange={(newTags: string[]) => {
                   setSnippetLanguages(newTags);
                 }}
