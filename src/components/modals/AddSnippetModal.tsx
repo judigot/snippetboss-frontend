@@ -21,6 +21,8 @@ function AddSnippetModal({}: Props) {
   const [selectedLang] = useAtom(selectedLangAtom);
   const [languages] = useAtom(languagesAtom);
 
+  const [snippetLanguages, setSnippetLanguages] = useState<string[]>([]);
+
   const language = languages?.find(
     (language) => language.language_name === selectedLang,
   )!;
@@ -33,7 +35,7 @@ function AddSnippetModal({}: Props) {
 
   const [formData, setFormData] = useState({
     prefix_id: '',
-    snippet_type_id: '',
+    snippet_type_id: 1,
     snippet_content: '',
   });
 
@@ -43,12 +45,28 @@ function AddSnippetModal({}: Props) {
     if (isOpen) {
       setFormData({
         prefix_id: '',
-        snippet_type_id: '',
+        snippet_type_id: 1,
         snippet_content: '',
       });
+      setSnippetLanguages(() => {
+        return [];
+      });
+
+      if (selectedLang !== undefined) {
+        setSnippetLanguages((prevState) => {
+          const prev: string[] | undefined = prevState;
+          if (prev !== undefined) {
+            prev.push(selectedLang);
+            return prev;
+          }
+          return prevState;
+        });
+      }
+
       const textareaElement = document.getElementById(
         'snippet_content',
       ) as HTMLTextAreaElement | null;
+
       if (textareaElement) textareaElement.focus();
     }
   }, [isOpen]);
@@ -97,9 +115,7 @@ function AddSnippetModal({}: Props) {
     if (e.target === e.currentTarget) {
       // Check if any form field is filled
       const isFormFilled =
-        formData.snippet_content !== '' ||
-        formData.prefix_id !== '' ||
-        formData.snippet_type_id !== '';
+        formData.snippet_content !== '' || formData.prefix_id !== '';
 
       // Only close the modal if no form fields are filled
       if (!isFormFilled) {
@@ -124,10 +140,7 @@ function AddSnippetModal({}: Props) {
               if (e.key === 'Escape') {
                 // Check if any form field is filled
                 const isFormFilled =
-                  formData.snippet_content !== '' ||
-                  formData.prefix_id !== '' ||
-                  formData.snippet_type_id !== '';
-
+                  formData.snippet_content !== '' || formData.prefix_id !== '';
                 // Only close the modal if no form fields are filled
                 if (!isFormFilled) {
                   setIsOpen(false);
@@ -215,6 +228,8 @@ function AddSnippetModal({}: Props) {
                 </div>
               </div>
 
+              {JSON.stringify(snippetLanguages, null, 4)}
+
               <div className="space-y-1">
                 <label
                   htmlFor="snippet_type_id"
@@ -229,7 +244,6 @@ function AddSnippetModal({}: Props) {
                   onChange={handleChange}
                   className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="">Select a type</option>
                   {Object.entries(snippetTypeOptions).map(([key, value]) => (
                     <option key={key} value={value}>
                       {key}
