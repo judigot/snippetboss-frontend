@@ -9,6 +9,7 @@ import {
 } from '@/state';
 import { useAtom } from 'jotai';
 import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
+import TagInput from '@/components/modals/TagInput';
 
 interface Props {}
 
@@ -225,7 +226,22 @@ function AddSnippetModal({}: Props) {
               </div>
             </div>
 
-            {JSON.stringify(snippetLanguages, null, 4)}
+            <div className="space-y-1">
+              <label
+                htmlFor="snippet_type_id"
+                className="text-sm font-medium text-gray-300"
+              >
+                Languages
+              </label>
+              <TagInput
+                placeholder="Enter tags"
+                values={snippetLanguages}
+                suggestions={['JudeScript']}
+                onChange={(newTags: string[]) => {
+                  setSnippetLanguages(newTags);
+                }}
+              />
+            </div>
 
             <div className="space-y-1">
               <label
