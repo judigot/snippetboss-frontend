@@ -27,7 +27,7 @@ function AddSnippetModal({}: Props) {
     (language) => language.language_name === selectedLang,
   )!;
 
-  const [isOpen, setIsOpen] = useAtom(isAddSnippetModalVisibleAtom);
+  const [, setIsOpen] = useAtom(isAddSnippetModalVisibleAtom);
   const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguage] = useAtom(
     unusedPrefixesByLanguageAtom,
   );
@@ -42,34 +42,32 @@ function AddSnippetModal({}: Props) {
   const [, setIsAddPrefixModalVisible] = useAtom(isAddPrefixModalVisibleAtom);
 
   useEffect(() => {
-    if (isOpen) {
-      setFormData({
-        prefix_id: '',
-        snippet_type_id: 1,
-        snippet_content: '',
+    setFormData({
+      prefix_id: '',
+      snippet_type_id: 1,
+      snippet_content: '',
+    });
+    setSnippetLanguages(() => {
+      return [];
+    });
+
+    if (selectedLang !== undefined) {
+      setSnippetLanguages((prevState) => {
+        const prev: string[] | undefined = prevState;
+        if (prev !== undefined) {
+          prev.push(selectedLang);
+          return prev;
+        }
+        return prevState;
       });
-      setSnippetLanguages(() => {
-        return [];
-      });
-
-      if (selectedLang !== undefined) {
-        setSnippetLanguages((prevState) => {
-          const prev: string[] | undefined = prevState;
-          if (prev !== undefined) {
-            prev.push(selectedLang);
-            return prev;
-          }
-          return prevState;
-        });
-      }
-
-      const textareaElement = document.getElementById(
-        'snippet_content',
-      ) as HTMLTextAreaElement | null;
-
-      if (textareaElement) textareaElement.focus();
     }
-  }, [isOpen]);
+
+    const textareaElement = document.getElementById(
+      'snippet_content',
+    ) as HTMLTextAreaElement | null;
+
+    if (textareaElement) textareaElement.focus();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -126,151 +124,149 @@ function AddSnippetModal({}: Props) {
 
   return (
     <>
-      {isOpen && (
+      <div
+        onClick={handleBackdropClick}
+        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4"
+        tabIndex={-1}
+      >
         <div
-          onClick={handleBackdropClick}
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4"
-          tabIndex={-1}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="bg-stone-900 p-8 rounded-lg shadow-lg max-w-md w-full space-y-4"
-            onKeyDown={(e) => {
-              // Check if the Escape key was pressed
-              if (e.key === 'Escape') {
-                // Check if any form field is filled
-                const isFormFilled =
-                  formData.snippet_content !== '' || formData.prefix_id !== '';
-                // Only close the modal if no form fields are filled
-                if (!isFormFilled) {
-                  setIsOpen(false);
-                }
+          onClick={(e) => e.stopPropagation()}
+          className="bg-stone-900 p-8 rounded-lg shadow-lg max-w-md w-full space-y-4"
+          onKeyDown={(e) => {
+            // Check if the Escape key was pressed
+            if (e.key === 'Escape') {
+              // Check if any form field is filled
+              const isFormFilled =
+                formData.snippet_content !== '' || formData.prefix_id !== '';
+              // Only close the modal if no form fields are filled
+              if (!isFormFilled) {
+                setIsOpen(false);
               }
-            }}
-          >
-            <h1 className="text-xl font-bold text-white">
-              Add {language.display_name} snippet
-            </h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-1">
-                <label
-                  htmlFor="snippet_content"
-                  className="text-sm font-medium text-gray-300"
-                >
-                  Snippet Content
-                </label>
-                <textarea
-                  id="snippet_content"
-                  name="snippet_content"
-                  value={formData.snippet_content}
-                  onChange={handleChange}
-                  className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 min-h-[200px] max-h-[500px]"
-                  rows={3}
-                />
-              </div>
+            }
+          }}
+        >
+          <h1 className="text-xl font-bold text-white">
+            Add {language.display_name} snippet
+          </h1>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1">
+              <label
+                htmlFor="snippet_content"
+                className="text-sm font-medium text-gray-300"
+              >
+                Snippet Content
+              </label>
+              <textarea
+                id="snippet_content"
+                name="snippet_content"
+                value={formData.snippet_content}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 min-h-[200px] max-h-[500px]"
+                rows={3}
+              />
+            </div>
 
-              <div className="space-y-1">
-                <label
-                  htmlFor="prefix_id"
-                  className="text-sm font-medium text-gray-300"
-                >
-                  Prefix
-                </label>
-                <select
-                  onClick={() => {
-                    const isLanguageNameNotInUnusedPrefixes =
-                      !unusedPrefixesByLanguage ||
-                      !(language.language_name in unusedPrefixesByLanguage);
+            <div className="space-y-1">
+              <label
+                htmlFor="prefix_id"
+                className="text-sm font-medium text-gray-300"
+              >
+                Prefix
+              </label>
+              <select
+                onClick={() => {
+                  const isLanguageNameNotInUnusedPrefixes =
+                    !unusedPrefixesByLanguage ||
+                    !(language.language_name in unusedPrefixesByLanguage);
 
-                    if (isLanguageNameNotInUnusedPrefixes) {
-                      readPrefixUnusedByLanguage(language.language_name)
-                        .then((result) => {
-                          if (result) {
-                            /* Dynamically set a property on `setUnusedPrefixesByLanguageAtom` using `language_name` */
-                            setUnusedPrefixesByLanguage({
-                              [language.language_name]: result,
-                            });
-                          }
-                        })
-                        .catch(() => {});
-                    }
-                  }}
-                  id="prefix_id"
-                  name="prefix_id"
-                  value={formData.prefix_id}
-                  onChange={handleChange}
-                  className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">Select a prefix</option>
-                  {prefixOptions &&
-                    prefixOptions.map(
-                      ({ prefix_id, prefix_description, prefix_names }) => (
-                        <option key={prefix_id} value={prefix_id}>
-                          {prefix_names.find(
-                            (prefix_name) => prefix_name.is_default,
-                          )?.prefix_name || 'Default'}{' '}
-                          - {prefix_description}
-                        </option>
-                      ),
-                    )}
-                </select>
-              </div>
+                  if (isLanguageNameNotInUnusedPrefixes) {
+                    readPrefixUnusedByLanguage(language.language_name)
+                      .then((result) => {
+                        if (result) {
+                          /* Dynamically set a property on `setUnusedPrefixesByLanguageAtom` using `language_name` */
+                          setUnusedPrefixesByLanguage({
+                            [language.language_name]: result,
+                          });
+                        }
+                      })
+                      .catch(() => {});
+                  }
+                }}
+                id="prefix_id"
+                name="prefix_id"
+                value={formData.prefix_id}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Select a prefix</option>
+                {prefixOptions &&
+                  prefixOptions.map(
+                    ({ prefix_id, prefix_description, prefix_names }) => (
+                      <option key={prefix_id} value={prefix_id}>
+                        {prefix_names.find(
+                          (prefix_name) => prefix_name.is_default,
+                        )?.prefix_name || 'Default'}{' '}
+                        - {prefix_description}
+                      </option>
+                    ),
+                  )}
+              </select>
+            </div>
 
-              <div className="flex justify-center">or</div>
-              <div className="flex justify-center">
-                <div className="flex items-center justify-center">
-                  <button
-                    className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
-                    onClick={() => setIsAddPrefixModalVisible(true)}
-                  >
-                    Add prefix
-                  </button>
-                </div>
-              </div>
-
-              {JSON.stringify(snippetLanguages, null, 4)}
-
-              <div className="space-y-1">
-                <label
-                  htmlFor="snippet_type_id"
-                  className="text-sm font-medium text-gray-300"
-                >
-                  Snippet Type
-                </label>
-                <select
-                  id="snippet_type_id"
-                  name="snippet_type_id"
-                  value={formData.snippet_type_id}
-                  onChange={handleChange}
-                  className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                >
-                  {Object.entries(snippetTypeOptions).map(([key, value]) => (
-                    <option key={key} value={value}>
-                      {key}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex justify-end space-x-3">
+            <div className="flex justify-center">or</div>
+            <div className="flex justify-center">
+              <div className="flex items-center justify-center">
                 <button
-                  type="button"
-                  className="px-4 py-2 bg-gray-500 text-white font-medium rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
-                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+                  onClick={() => setIsAddPrefixModalVisible(true)}
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                >
-                  Submit
+                  Add prefix
                 </button>
               </div>
-            </form>
-          </div>
+            </div>
+
+            {JSON.stringify(snippetLanguages, null, 4)}
+
+            <div className="space-y-1">
+              <label
+                htmlFor="snippet_type_id"
+                className="text-sm font-medium text-gray-300"
+              >
+                Snippet Type
+              </label>
+              <select
+                id="snippet_type_id"
+                name="snippet_type_id"
+                value={formData.snippet_type_id}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              >
+                {Object.entries(snippetTypeOptions).map(([key, value]) => (
+                  <option key={key} value={value}>
+                    {key}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                type="button"
+                className="px-4 py-2 bg-gray-500 text-white font-medium rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                onClick={() => setIsOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
         </div>
-      )}
+      </div>
     </>
   );
 }

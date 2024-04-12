@@ -11,7 +11,7 @@ import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-l
 interface PrefixForm extends PrefixRequestBody {}
 
 function AddPrefixModal() {
-  const [isOpen, setIsOpen] = useAtom(isAddPrefixModalVisibleAtom);
+  const [, setIsOpen] = useAtom(isAddPrefixModalVisibleAtom);
   const [selectedLang] = useAtom(selectedLangAtom);
   const [, setUnusedPrefixesByLanguage] = useAtom(unusedPrefixesByLanguageAtom);
 
@@ -125,10 +125,10 @@ function AddPrefixModal() {
 
   useEffect(() => {
     setFormData({ prefix_description: '', prefix_names: [] });
-    if (isOpen && prefixDescriptionInputRef.current) {
+    if (prefixDescriptionInputRef.current) {
       prefixDescriptionInputRef.current.focus();
     }
-  }, [isOpen]);
+  }, []);
 
   const removeWord = (prefixName: string) => {
     const prefixNamesMutated = formData.prefix_names.filter(
@@ -145,92 +145,90 @@ function AddPrefixModal() {
 
   return (
     <>
-      {isOpen && (
-        <div
-          onClick={handleBackdropClick}
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-        >
-          <div className="bg-stone-900 p-8 rounded-lg shadow-lg max-w-md w-full space-y-4">
-            <h1 className="text-lg font-bold text-white">Add Prefix</h1>
+      <div
+        onClick={handleBackdropClick}
+        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+      >
+        <div className="bg-stone-900 p-8 rounded-lg shadow-lg max-w-md w-full space-y-4">
+          <h1 className="text-lg font-bold text-white">Add Prefix</h1>
 
-            <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
-              <div>
-                <label
-                  htmlFor="prefix_description"
-                  className="block text-sm font-medium text-gray-300"
-                >
-                  Description
-                </label>
-                <input
-                  ref={prefixDescriptionInputRef}
-                  placeholder="e.g. String Variable"
-                  required
-                  type="text"
-                  name="prefix_description"
-                  id="prefix_description"
-                  className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  onChange={handleInputChange}
-                  onKeyDown={(e) => {
-                    handleKeyDown(e);
-                  }}
-                />
-              </div>
+          <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+            <div>
+              <label
+                htmlFor="prefix_description"
+                className="block text-sm font-medium text-gray-300"
+              >
+                Description
+              </label>
+              <input
+                ref={prefixDescriptionInputRef}
+                placeholder="e.g. String Variable"
+                required
+                type="text"
+                name="prefix_description"
+                id="prefix_description"
+                className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                onChange={handleInputChange}
+                onKeyDown={(e) => {
+                  handleKeyDown(e);
+                }}
+              />
+            </div>
 
-              <div>
-                <label
-                  htmlFor="prefix_description"
-                  className="block text-sm font-medium text-gray-300"
-                >
-                  Prefix names
-                </label>
-                <input
-                  type="text"
-                  name="prefix_names"
-                  id="prefix_names"
-                  value={prefixNameInputValue}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                  placeholder="e.g. varString"
-                  className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
-                <div className="">
-                  {formData.prefix_names.map((word, index) => (
-                    <div
-                      key={index}
-                      className="inline-flex mt-5 m-1 items-center bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full"
+            <div>
+              <label
+                htmlFor="prefix_description"
+                className="block text-sm font-medium text-gray-300"
+              >
+                Prefix names
+              </label>
+              <input
+                type="text"
+                name="prefix_names"
+                id="prefix_names"
+                value={prefixNameInputValue}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                placeholder="e.g. varString"
+                className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+              <div className="">
+                {formData.prefix_names.map((word, index) => (
+                  <div
+                    key={index}
+                    className="inline-flex mt-5 m-1 items-center bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full"
+                  >
+                    {word.prefix_name}
+                    <button
+                      type="button"
+                      onClick={() => removeWord(word.prefix_name)}
+                      className="bg-blue-200 ml-2 rounded-full p-1 hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
                     >
-                      {word.prefix_name}
-                      <button
-                        type="button"
-                        onClick={() => removeWord(word.prefix_name)}
-                        className="bg-blue-200 ml-2 rounded-full p-1 hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                      >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                      &times;
+                    </button>
+                  </div>
+                ))}
               </div>
+            </div>
 
-              <div className="flex justify-end space-x-3">
-                <button
-                  type="button"
-                  className="px-4 py-2 bg-gray-500 text-white font-medium rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
+            <div className="flex justify-end space-x-3">
+              <button
+                type="button"
+                className="px-4 py-2 bg-gray-500 text-white font-medium rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                onClick={() => setIsOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
         </div>
-      )}
+      </div>
     </>
   );
 }

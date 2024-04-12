@@ -1,6 +1,10 @@
 import LanguageFilter from '@/components/language/LanguageFilter';
 import { useAtom } from 'jotai';
-import { isAddLanguageModalVisibleAtom } from '@/state';
+import {
+  isAddLanguageModalVisibleAtom,
+  isAddPrefixModalVisibleAtom,
+  isAddSnippetModalVisibleAtom,
+} from '@/state';
 import AddLanguageModal from '@/components/modals/AddLanguageModal';
 import AddPrefixModal from '@/components/modals/AddPrefixModal';
 import AddSnippetModal from '@/components/modals/AddSnippetModal';
@@ -8,9 +12,13 @@ import AddSnippetModal from '@/components/modals/AddSnippetModal';
 interface Props {}
 
 function App({}: Props) {
-  const [, setIsAddLanguageModalVisible] = useAtom(
+  const [isAddLanguageModalVisible, setIsAddLanguageModalVisible] = useAtom(
     isAddLanguageModalVisibleAtom,
   );
+
+  const [isAddSnippetModalVisible] = useAtom(isAddSnippetModalVisibleAtom);
+
+  const [isAddPrefixModalVisible] = useAtom(isAddPrefixModalVisibleAtom);
 
   return (
     <div
@@ -27,9 +35,10 @@ function App({}: Props) {
       >
         +
       </button>
-      <AddLanguageModal />
-      <AddSnippetModal />
-      <AddPrefixModal />
+
+      {isAddLanguageModalVisible && <AddLanguageModal />}
+      {isAddSnippetModalVisible && <AddSnippetModal />}
+      {isAddPrefixModalVisible && <AddPrefixModal />}
     </div>
   );
 }
