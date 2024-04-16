@@ -6,6 +6,7 @@ export interface language {
 
 export interface prefix {
   prefix_id: number;
+  snippet_type_id: number;
   prefix_description: string;
 }
 
@@ -30,7 +31,7 @@ export interface prefix_name {
 // Intersection Types
 export type PrefixResponse = prefix & {
   prefix_names: prefix_name[];
-};
+} & Omit<snippet_type, 'snippet_type_id'>;
 
 export type SnippetResponse = snippet &
   prefix & {
