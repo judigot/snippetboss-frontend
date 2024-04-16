@@ -7,6 +7,7 @@ import {
 } from '@/state';
 import { useAtom } from 'jotai';
 import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
+import { snippetTypeOptions } from '@/components/modals/AddSnippetModal';
 
 interface PrefixForm extends PrefixRequestBody {}
 
@@ -20,17 +21,21 @@ function AddPrefixModal() {
   const FORM_FIELDS = {
     PREFIX_DESCRIPTION: 'prefix_description',
     PREFIX_NAMES: 'prefix_names',
+    SNIPPET_TYPE_ID: 'snippet_type_id',
   } as const;
 
   const [formData, setFormData] = useState<PrefixForm>({
     [FORM_FIELDS.PREFIX_DESCRIPTION]: '',
     [FORM_FIELDS.PREFIX_NAMES]: [],
+    [FORM_FIELDS.SNIPPET_TYPE_ID]: 1,
   });
 
   // Use useRef to manage focus on the input element
   const prefixDescriptionInputRef = useRef<HTMLInputElement>(null);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
 
     if (name === FORM_FIELDS.PREFIX_DESCRIPTION) {
@@ -41,6 +46,10 @@ function AddPrefixModal() {
       setPrefixNameInputValue(() => {
         return value;
       });
+    }
+
+    if (name === FORM_FIELDS.SNIPPET_TYPE_ID) {
+      setFormData({ ...formData, [name]: Number(value) });
     }
   };
 
@@ -99,9 +108,14 @@ function AddPrefixModal() {
       prefix_description &&
       (prefixNameInputValue.trim() || isThereSelectedPrefixNames)
     ) {
+      let data: typeof formData = {
+        prefix_description: '',
+        prefix_names: [],
+        snippet_type_id: 1,
+      };
       try {
         if (prefixNameInputValue.trim() && !isThereSelectedPrefixNames) {
-          await createPrefix({
+          data = {
             prefix_description: formData.prefix_description,
             prefix_names: [
               {
@@ -109,12 +123,15 @@ function AddPrefixModal() {
                 prefix_name: prefixNameInputValue.trim(),
               },
             ],
-          });
+            snippet_type_id: formData.snippet_type_id,
+          };
         }
 
         if (isThereSelectedPrefixNames) {
-          await createPrefix(formData);
+          data = formData;
         }
+
+        createPrefix(data);
 
         if (selectedLang) {
           readPrefixUnusedByLanguage(selectedLang)
@@ -143,7 +160,11 @@ function AddPrefixModal() {
   };
 
   useEffect(() => {
-    setFormData({ prefix_description: '', prefix_names: [] });
+    setFormData({
+      prefix_description: '',
+      prefix_names: [],
+      snippet_type_id: 1,
+    });
     if (prefixDescriptionInputRef.current) {
       prefixDescriptionInputRef.current.focus();
     }
@@ -164,6 +185,7 @@ function AddPrefixModal() {
 
   return (
     <>
+      <h1>{JSON.stringify(formData, null, 4)}</h1>
       <div
         onClick={handleBackdropClick}
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
@@ -172,63 +194,79 @@ function AddPrefixModal() {
           <h1 className="text-lg font-bold text-white">Add Prefix</h1>
 
           <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="prefix_description"
-                className="block text-sm font-medium text-gray-300"
-              >
-                Description
-              </label>
-              <input
-                ref={prefixDescriptionInputRef}
-                placeholder="e.g. String Variable"
-                required
-                type="text"
-                name="prefix_description"
-                id="prefix_description"
-                className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                onChange={handleInputChange}
-                onKeyDown={(e) => {
-                  handleKeyDown(e);
-                }}
-              />
+            <label
+              htmlFor="prefix_description"
+              className="block text-sm font-medium text-gray-300"
+            >
+              Description
+            </label>
+            <input
+              ref={prefixDescriptionInputRef}
+              placeholder="e.g. String Variable"
+              required
+              type="text"
+              name="prefix_description"
+              id="prefix_description"
+              className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              onChange={handleChange}
+              onKeyDown={(e) => {
+                handleKeyDown(e);
+              }}
+            />
+
+            <label
+              htmlFor="prefix_description"
+              className="block text-sm font-medium text-gray-300"
+            >
+              Prefix names
+            </label>
+            <input
+              type="text"
+              name="prefix_names"
+              id="prefix_names"
+              value={prefixNameInputValue}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              placeholder="e.g. varString"
+              className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
+            <div className="">
+              {formData.prefix_names.map((word, index) => (
+                <div
+                  key={index}
+                  className="inline-flex mt-5 m-1 items-center bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full"
+                >
+                  {word.prefix_name}
+                  <button
+                    type="button"
+                    onClick={() => removeWord(word.prefix_name)}
+                    className="bg-blue-200 ml-2 rounded-full p-1 hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
             </div>
 
-            <div>
-              <label
-                htmlFor="prefix_description"
-                className="block text-sm font-medium text-gray-300"
-              >
-                Prefix names
-              </label>
-              <input
-                type="text"
-                name="prefix_names"
-                id="prefix_names"
-                value={prefixNameInputValue}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-                placeholder="e.g. varString"
-                className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-              <div className="">
-                {formData.prefix_names.map((word, index) => (
-                  <div
-                    key={index}
-                    className="inline-flex mt-5 m-1 items-center bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full"
-                  >
-                    {word.prefix_name}
-                    <button
-                      type="button"
-                      onClick={() => removeWord(word.prefix_name)}
-                      className="bg-blue-200 ml-2 rounded-full p-1 hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                    >
-                      &times;
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <label
+              htmlFor="snippet_type_id"
+              className="text-sm font-medium text-gray-300"
+            >
+              Snippet Type
+            </label>
+            <select
+              id="snippet_type_id"
+              name="snippet_type_id"
+              value={formData.snippet_type_id}
+              onChange={handleChange}
+              className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+              {Object.entries(snippetTypeOptions).map(([key, value]) => (
+                <option key={key} value={value}>
+                  {key}
+                </option>
+              ))}
+            </select>
 
             <div className="flex justify-end space-x-3">
               <button

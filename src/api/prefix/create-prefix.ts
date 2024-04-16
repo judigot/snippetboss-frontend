@@ -6,6 +6,7 @@ export interface PrefixRequestBody {
     prefix_name: string;
     is_default: boolean;
   }[];
+  snippet_type_id: number;
 }
 
 export const createPrefix = async (

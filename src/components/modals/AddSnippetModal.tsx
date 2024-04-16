@@ -13,7 +13,7 @@ import TagInput from '@/components/modals/TagInput';
 
 interface Props {}
 
-const snippetTypeOptions = {
+export const snippetTypeOptions = {
   Global: 1,
   Specific: 2,
 } as const;
