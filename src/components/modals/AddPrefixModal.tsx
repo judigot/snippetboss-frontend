@@ -185,7 +185,6 @@ function AddPrefixModal() {
 
   return (
     <>
-      <h1>{JSON.stringify(formData, null, 4)}</h1>
       <div
         onClick={handleBackdropClick}
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
