@@ -5,8 +5,8 @@ interface TagInputProps {
   inputValue?: string;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   addedValues: string[];
-  suggestions?: string[];
   onAddValue: (newTags: string[]) => void;
+  suggestions?: string[];
 }
 
 function TagInput({
