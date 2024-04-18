@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 
 interface TagInputProps {
   placeholder?: string;
+  value?: string;
   values: string[];
   suggestions?: string[];
-  onChange: (newTags: string[]) => void;
+  onAddValue: (newTags: string[]) => void;
 }
 
 function TagInput({
   placeholder = 'Enter values',
+  value = '',
   values,
   suggestions = [
     'Suggestion 1',
@@ -16,10 +18,10 @@ function TagInput({
     'Suggestion 3',
     'Suggestion 4',
   ],
-  onChange,
+  onAddValue,
 }: TagInputProps) {
   const [tags, setTags] = useState<string[]>(values);
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(value);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false); // Define the state for showing suggestions
@@ -52,14 +54,14 @@ function TagInput({
     if (!tags.includes(tag)) {
       const newTags = [...tags, tag];
       setTags(newTags);
-      onChange(newTags);
+      onAddValue(newTags);
     }
   };
 
   const removeTag = (index: number) => {
     const newTags = tags.filter((_, i) => i !== index);
     setTags(newTags);
-    onChange(newTags);
+    onAddValue(newTags);
   };
 
   const filterAndSetSuggestions = (input: string) => {

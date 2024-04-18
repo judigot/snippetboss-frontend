@@ -243,7 +243,7 @@ function AddSnippetModal({}: Props) {
                 suggestions={languages?.map(
                   (language) => language.language_name,
                 )}
-                onChange={(newTags: string[]) => {
+                onAddValue={(newTags: string[]) => {
                   setSnippetLanguages(newTags);
                 }}
               />
