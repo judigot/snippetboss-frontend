@@ -239,13 +239,13 @@ function AddSnippetModal({}: Props) {
               </label>
               <TagInput
                 placeholder="Enter tags"
-                values={snippetLanguages}
-                suggestions={languages?.map(
-                  (language) => language.language_name,
-                )}
+                addedValues={snippetLanguages}
                 onAddValue={(newTags: string[]) => {
                   setSnippetLanguages(newTags);
                 }}
+                suggestions={languages?.map(
+                  (language) => language.language_name,
+                )}
               />
             </div>
 

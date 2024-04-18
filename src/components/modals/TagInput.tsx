@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 interface TagInputProps {
   placeholder?: string;
   value?: string;
-  values: string[];
+  addedValues: string[];
   suggestions?: string[];
   onAddValue: (newTags: string[]) => void;
 }
@@ -11,7 +11,7 @@ interface TagInputProps {
 function TagInput({
   placeholder = 'Enter values',
   value = '',
-  values,
+  addedValues,
   suggestions = [
     'Suggestion 1',
     'Suggestion 2',
@@ -20,15 +20,15 @@ function TagInput({
   ],
   onAddValue,
 }: TagInputProps) {
-  const [tags, setTags] = useState<string[]>(values);
+  const [tags, setTags] = useState<string[]>(addedValues);
   const [inputValue, setInputValue] = useState<string>(value);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false); // Define the state for showing suggestions
 
   useEffect(() => {
-    setTags(values);
-  }, [values]);
+    setTags(addedValues);
+  }, [addedValues]);
 
   useEffect(() => {
     // Filter to show only unselected options
