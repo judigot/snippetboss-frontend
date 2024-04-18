@@ -22,6 +22,8 @@ function AddSnippetModal({}: Props) {
   const [selectedLang] = useAtom(selectedLangAtom);
   const [languages] = useAtom(languagesAtom);
 
+  const [snippetLanguagesInput, setSnippetLanguagesInput] =
+    useState<string>('');
   const [snippetLanguages, setSnippetLanguages] = useState<string[]>([]);
 
   const language = languages?.find(
@@ -239,6 +241,8 @@ function AddSnippetModal({}: Props) {
               </label>
               <TagInput
                 placeholder="Enter tags"
+                inputValue={snippetLanguagesInput}
+                setInputValue={setSnippetLanguagesInput}
                 addedValues={snippetLanguages}
                 onAddValue={(newTags: string[]) => {
                   setSnippetLanguages(newTags);
