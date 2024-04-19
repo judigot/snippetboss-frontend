@@ -22,9 +22,6 @@ function AddPrefixModal() {
   const [snippetLanguagesInput, setSnippetLanguagesInput] =
     useState<string>('');
   const [snippetLanguages, setSnippetLanguages] = useState<string[]>([]);
-  const language = languages?.find(
-    (language) => language.language_name === selectedLang,
-  )!;
 
   const [prefixNameInputValue, setPrefixNameInputValue] = useState('');
 
@@ -32,12 +29,14 @@ function AddPrefixModal() {
     PREFIX_DESCRIPTION: 'prefix_description',
     PREFIX_NAMES: 'prefix_names',
     SNIPPET_TYPE_ID: 'snippet_type_id',
+    PREFIX_LANGUAGE: 'prefix_language',
   } as const;
 
   const [formData, setFormData] = useState<PrefixForm>({
     [FORM_FIELDS.PREFIX_DESCRIPTION]: '',
     [FORM_FIELDS.PREFIX_NAMES]: [],
     [FORM_FIELDS.SNIPPET_TYPE_ID]: 1,
+    [FORM_FIELDS.PREFIX_LANGUAGE]: snippetLanguages,
   });
 
   // Use useRef to manage focus on the input element
@@ -110,6 +109,7 @@ function AddPrefixModal() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const { prefix_description, prefix_names } = formData;
 
     const isThereSelectedPrefixNames: boolean = prefix_names.length > 0;
@@ -122,25 +122,33 @@ function AddPrefixModal() {
         prefix_description: '',
         prefix_names: [],
         snippet_type_id: 1,
+        prefix_language: snippetLanguages,
       };
+
+      if (prefixNameInputValue.trim() && !isThereSelectedPrefixNames) {
+        data = {
+          prefix_description: formData.prefix_description,
+          prefix_names: [
+            {
+              is_default: true,
+              prefix_name: prefixNameInputValue.trim(),
+            },
+          ],
+          snippet_type_id: formData.snippet_type_id,
+          prefix_language: snippetLanguages,
+        };
+      }
+
+      if (isThereSelectedPrefixNames) {
+        data = {
+          ...formData,
+          ...{
+            prefix_language: snippetLanguages,
+          },
+        };
+      }
+      /* prettier-ignore */ (() => { const QuickLog = JSON.stringify(data, null, 4); const parentDiv = document.getElementById('quicklogContainer') || (() => {const div = document.createElement('div');div.id = 'quicklogContainer';div.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end;';document.body.appendChild(div);return div; })(); const createChildDiv = (text: typeof QuickLog) => {const newDiv = Object.assign(document.createElement('div'), { textContent: text, style: 'font: bold 25px "Comic Sans MS"; width: max-content; max-width: 500px; word-wrap: break-word; background-color: rgb(255, 240, 0); box-shadow: white 0px 0px 5px 1px; padding: 5px; border: 3px solid black; border-radius: 10px; color: black !important; cursor: pointer;',});const handleMouseDown = (e: MouseEvent) => { e.preventDefault(); const clickedDiv = e.target instanceof Element && e.target.closest('div');if (clickedDiv !== null && e.button === 0 && clickedDiv === newDiv) { const textArea = document.createElement('textarea'); textArea.value = clickedDiv.textContent ?? ''; document.body.appendChild(textArea); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea);clickedDiv.style.backgroundColor = 'green'; setTimeout(() => { clickedDiv.style.backgroundColor = 'rgb(255, 240, 0)'; }, 1000); }};const handleRightClick = (e: MouseEvent) => { e.preventDefault(); if (parentDiv.contains(newDiv)) { parentDiv.removeChild(newDiv); }};newDiv.addEventListener('mousedown', handleMouseDown);newDiv.addEventListener('contextmenu', handleRightClick);return newDiv; };parentDiv.prepend(createChildDiv(QuickLog)); })()
       try {
-        if (prefixNameInputValue.trim() && !isThereSelectedPrefixNames) {
-          data = {
-            prefix_description: formData.prefix_description,
-            prefix_names: [
-              {
-                is_default: true,
-                prefix_name: prefixNameInputValue.trim(),
-              },
-            ],
-            snippet_type_id: formData.snippet_type_id,
-          };
-        }
-
-        if (isThereSelectedPrefixNames) {
-          data = formData;
-        }
-
         createPrefix(data);
 
         if (selectedLang) {
@@ -154,7 +162,7 @@ function AddPrefixModal() {
             })
             .catch(() => {});
         }
-        setIsOpen(false);
+        // setIsOpen(false);
       } catch (error) {
         console.error('Error creating prefix:', error);
       }
@@ -174,6 +182,7 @@ function AddPrefixModal() {
       prefix_description: '',
       prefix_names: [],
       snippet_type_id: 1,
+      prefix_language: [],
     });
     if (prefixDescriptionInputRef.current) {
       prefixDescriptionInputRef.current.focus();
@@ -195,6 +204,7 @@ function AddPrefixModal() {
 
   return (
     <>
+      {JSON.stringify(formData, null, 4)}
       <div
         onClick={handleBackdropClick}
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
