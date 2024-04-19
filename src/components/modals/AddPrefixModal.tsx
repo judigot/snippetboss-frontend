@@ -2,19 +2,29 @@ import React, { FormEvent, useEffect, useRef, useState } from 'react'; // Now in
 import { PrefixRequestBody, createPrefix } from '@/api/prefix/create-prefix'; // Ensure this API function is correctly implemented
 import {
   isAddPrefixModalVisibleAtom,
+  languagesAtom,
   selectedLangAtom,
   unusedPrefixesByLanguageAtom,
 } from '@/state';
 import { useAtom } from 'jotai';
 import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
 import { snippetTypeOptions } from '@/components/modals/AddSnippetModal';
+import TagInput from '@/components/modals/TagInput';
 
 interface PrefixForm extends PrefixRequestBody {}
 
 function AddPrefixModal() {
   const [, setIsOpen] = useAtom(isAddPrefixModalVisibleAtom);
   const [selectedLang] = useAtom(selectedLangAtom);
+  const [languages] = useAtom(languagesAtom);
   const [, setUnusedPrefixesByLanguage] = useAtom(unusedPrefixesByLanguageAtom);
+
+  const [snippetLanguagesInput, setSnippetLanguagesInput] =
+    useState<string>('');
+  const [snippetLanguages, setSnippetLanguages] = useState<string[]>([]);
+  const language = languages?.find(
+    (language) => language.language_name === selectedLang,
+  )!;
 
   const [prefixNameInputValue, setPrefixNameInputValue] = useState('');
 
@@ -266,6 +276,29 @@ function AddPrefixModal() {
                 </option>
               ))}
             </select>
+
+            {formData.snippet_type_id === 2 && (
+              <div className="space-y-1">
+                <label
+                  htmlFor="snippet_type_id"
+                  className="text-sm font-medium text-gray-300"
+                >
+                  Specific languages
+                </label>
+                <TagInput
+                  placeholder="Enter tags"
+                  inputValue={snippetLanguagesInput}
+                  setInputValue={setSnippetLanguagesInput}
+                  addedValues={snippetLanguages}
+                  onAddValue={(newTags: string[]) => {
+                    setSnippetLanguages(newTags);
+                  }}
+                  suggestions={languages?.map(
+                    (language) => language.language_name,
+                  )}
+                />
+              </div>
+            )}
 
             <div className="flex justify-end space-x-3">
               <button
