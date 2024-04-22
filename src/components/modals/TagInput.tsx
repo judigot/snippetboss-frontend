@@ -113,7 +113,7 @@ function TagInput({
       ))}
 
       <input
-        required={required}
+        required={addedValues.length === 0 && required} // Remove required if values are already added
         type="text"
         id={id}
         name={id}
@@ -138,6 +138,7 @@ function TagInput({
           ))}
         </ul>
       )}
+      <p>{(addedValues.length > 0).valueOf()}</p>
     </div>
   );
 }

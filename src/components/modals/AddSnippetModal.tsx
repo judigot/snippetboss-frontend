@@ -166,6 +166,7 @@ function AddSnippetModal({}: Props) {
               <textarea
                 id="snippet_content"
                 name="snippet_content"
+                required={true}
                 value={formData.snippet_content}
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 min-h-[200px] max-h-[500px]"
@@ -201,6 +202,7 @@ function AddSnippetModal({}: Props) {
                 }}
                 id="prefix_id"
                 name="prefix_id"
+                required={true}
                 value={formData.prefix_id}
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -241,7 +243,7 @@ function AddSnippetModal({}: Props) {
               </label>
               <TagInput
                 id="programming_languages"
-                required={false}
+                required={true}
                 placeholder="Enter languages"
                 inputValue={snippetLanguagesInput}
                 setInputValue={setSnippetLanguagesInput}
