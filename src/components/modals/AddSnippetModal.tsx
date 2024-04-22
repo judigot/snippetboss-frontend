@@ -240,6 +240,8 @@ function AddSnippetModal({}: Props) {
                 Languages
               </label>
               <TagInput
+                id="programming_languages"
+                required={false}
                 placeholder="Enter languages"
                 inputValue={snippetLanguagesInput}
                 setInputValue={setSnippetLanguagesInput}

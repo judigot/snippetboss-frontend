@@ -19,25 +19,33 @@ function AddPrefixModal() {
   const [languages] = useAtom(languagesAtom);
   const [, setUnusedPrefixesByLanguage] = useAtom(unusedPrefixesByLanguageAtom);
 
-  const [snippetLanguagesInput, setSnippetLanguagesInput] =
-    useState<string>('');
-  const [snippetLanguages, setSnippetLanguages] = useState<string[]>([]);
-
-  const [prefixNameInputValue, setPrefixNameInputValue] = useState('');
-
   const FORM_FIELDS = {
     PREFIX_DESCRIPTION: 'prefix_description',
     PREFIX_NAMES: 'prefix_names',
+    PREFIX_NAMES_RAW: 'prefix_names_raw',
     SNIPPET_TYPE_ID: 'snippet_type_id',
     PREFIX_LANGUAGE: 'prefix_language',
+    PREFIX_INPUT: 'prefix_input',
+    TAG_INPUT: 'tag_input',
   } as const;
 
-  const [formData, setFormData] = useState<PrefixForm>({
+  const blankForm = {
     [FORM_FIELDS.PREFIX_DESCRIPTION]: '',
     [FORM_FIELDS.PREFIX_NAMES]: [],
+    [FORM_FIELDS.PREFIX_NAMES_RAW]: [],
     [FORM_FIELDS.SNIPPET_TYPE_ID]: 1,
-    [FORM_FIELDS.PREFIX_LANGUAGE]: snippetLanguages,
-  });
+    [FORM_FIELDS.PREFIX_LANGUAGE]: [],
+    [FORM_FIELDS.PREFIX_INPUT]: '',
+    [FORM_FIELDS.TAG_INPUT]: '',
+  };
+
+  const [formData, setFormData] = useState<
+    PrefixForm & {
+      prefix_input: string;
+      prefix_names_raw: string[];
+      tag_input: string;
+    }
+  >(blankForm);
 
   // Use useRef to manage focus on the input element
   const prefixDescriptionInputRef = useRef<HTMLInputElement>(null);
@@ -52,9 +60,7 @@ function AddPrefixModal() {
     }
 
     if (name === FORM_FIELDS.PREFIX_NAMES) {
-      setPrefixNameInputValue(() => {
-        return value;
-      });
+      setFormData((prev) => ({ ...prev, prefix_input: value }));
     }
 
     if (name === FORM_FIELDS.SNIPPET_TYPE_ID) {
@@ -67,7 +73,7 @@ function AddPrefixModal() {
 
     if (
       formData.prefix_description === '' &&
-      prefixNameInputValue === '' &&
+      formData.prefix_input === '' &&
       formData.prefix_names.length === 0
     ) {
       if (ESCAPE) {
@@ -80,20 +86,20 @@ function AddPrefixModal() {
 
     if (
       !isPrefixNamesInputFocused &&
-      prefixNameInputValue.trim() !== '' &&
+      formData.prefix_input.trim() !== '' &&
       (e.key === 'Enter' || e.key === 'Tab')
     ) {
       e.preventDefault();
 
       const isPrefixNameAlreadySelected: boolean = !formData.prefix_names.some(
-        (item) => item.prefix_name === prefixNameInputValue.trim(),
+        (item) => item.prefix_name === formData.prefix_input.trim(),
       );
 
       if (isPrefixNameAlreadySelected) {
         const prefixNamesMutated = formData.prefix_names;
         prefixNamesMutated.push({
           is_default: prefixNamesMutated.length === 0 ? true : false,
-          prefix_name: prefixNameInputValue.trim(),
+          prefix_name: formData.prefix_input.trim(),
         });
 
         setFormData((prevFormData) => {
@@ -102,7 +108,7 @@ function AddPrefixModal() {
             prefix_names: prefixNamesMutated,
           };
         });
-        setPrefixNameInputValue('');
+        setFormData((prev) => ({ ...prev, prefix_input: '' }));
       }
     }
   };
@@ -110,46 +116,53 @@ function AddPrefixModal() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { prefix_description, prefix_names } = formData;
-
-    const isThereSelectedPrefixNames: boolean = prefix_names.length > 0;
+    const { prefix_input, prefix_description, prefix_names, prefix_names_raw } =
+      formData;
+    const isThereSelectedPrefixNames: boolean = prefix_names_raw.length > 0;
+    const isPrefixInputFilled: boolean =
+      prefix_input.trim() !== '' && !isThereSelectedPrefixNames;
 
     if (
       prefix_description &&
-      (prefixNameInputValue.trim() || isThereSelectedPrefixNames)
+      (isPrefixInputFilled || isThereSelectedPrefixNames)
     ) {
-      let data: typeof formData = {
-        prefix_description: '',
-        prefix_names: [],
-        snippet_type_id: 1,
-        prefix_language: snippetLanguages,
+      // Remove unnecessary properties & mutate prefix names at the same time
+      let {
+        prefix_input,
+        prefix_names_raw: _,
+        tag_input,
+        ...data
+      } = {
+        ...formData,
+        prefix_names: (() => {
+          // Convert prefix names strings into object
+          const prefixNamesMutated = prefix_names;
+          prefix_names_raw.forEach((prefixName: string) => {
+            prefixNamesMutated.push({
+              is_default: prefixNamesMutated.length === 0 ? true : false,
+              prefix_name: prefixName.trim(),
+            });
+          });
+          return prefixNamesMutated;
+        })(),
       };
 
-      if (prefixNameInputValue.trim() && !isThereSelectedPrefixNames) {
-        data = {
-          prefix_description: formData.prefix_description,
-          prefix_names: [
-            {
-              is_default: true,
-              prefix_name: prefixNameInputValue.trim(),
-            },
-          ],
-          snippet_type_id: formData.snippet_type_id,
-          prefix_language: snippetLanguages,
-        };
-      }
-
-      if (isThereSelectedPrefixNames) {
+      if (isPrefixInputFilled) {
         data = {
           ...formData,
           ...{
-            prefix_language: snippetLanguages,
+            prefix_names: [
+              {
+                is_default: true,
+                prefix_name: prefix_input.trim(),
+              },
+            ],
           },
         };
       }
+
       try {
         createPrefix(data);
-
         if (selectedLang) {
           readPrefixUnusedByLanguage(selectedLang)
             .then((result) => {
@@ -161,7 +174,7 @@ function AddPrefixModal() {
             })
             .catch(() => {});
         }
-        // setIsOpen(false);
+        setIsOpen(false);
       } catch (error) {
         console.error('Error creating prefix:', error);
       }
@@ -177,32 +190,15 @@ function AddPrefixModal() {
   };
 
   useEffect(() => {
-    setFormData({
-      prefix_description: '',
-      prefix_names: [],
-      snippet_type_id: 1,
-      prefix_language: [],
-    });
+    setFormData(blankForm);
     if (prefixDescriptionInputRef.current) {
       prefixDescriptionInputRef.current.focus();
     }
   }, []);
 
-  const removeWord = (prefixName: string) => {
-    const prefixNamesMutated = formData.prefix_names.filter(
-      (item) => item.prefix_name !== prefixName,
-    );
-
-    setFormData((prevFormData) => {
-      return {
-        ...prevFormData,
-        prefix_names: prefixNamesMutated,
-      };
-    });
-  };
-
   return (
     <>
+      {JSON.stringify(formData)}
       <div
         onClick={handleBackdropClick}
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
@@ -237,33 +233,23 @@ function AddPrefixModal() {
             >
               Prefix names
             </label>
-            <input
-              type="text"
-              name="prefix_names"
+            <TagInput
               id="prefix_names"
-              value={prefixNameInputValue}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              placeholder="e.g. varString"
-              className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              required={true}
+              placeholder="Add tags"
+              inputValue={formData.prefix_input.trim()}
+              setInputValue={(value: string) => {
+                setFormData((prev) => ({ ...prev, prefix_input: value }));
+              }}
+              addedValues={formData.prefix_names_raw}
+              onAddValue={(newTags: string[]) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  prefix_names_raw: newTags,
+                }))
+              }
+              suggestions={[]}
             />
-            <div className="">
-              {formData.prefix_names.map((word, index) => (
-                <div
-                  key={index}
-                  className="inline-flex mt-5 m-1 items-center bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full"
-                >
-                  {word.prefix_name}
-                  <button
-                    type="button"
-                    onClick={() => removeWord(word.prefix_name)}
-                    className="bg-blue-200 ml-2 rounded-full p-1 hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                  >
-                    &times;
-                  </button>
-                </div>
-              ))}
-            </div>
 
             <label
               htmlFor="snippet_type_id"
@@ -294,13 +280,20 @@ function AddPrefixModal() {
                   Specific languages
                 </label>
                 <TagInput
-                  placeholder="Enter languages"
-                  inputValue={snippetLanguagesInput}
-                  setInputValue={setSnippetLanguagesInput}
-                  addedValues={snippetLanguages}
-                  onAddValue={(newTags: string[]) => {
-                    setSnippetLanguages(newTags);
+                  id="tagInput"
+                  required={true}
+                  placeholder="Add tags"
+                  inputValue={formData.tag_input}
+                  setInputValue={(value: string) => {
+                    setFormData((prev) => ({ ...prev, tag_input: value }));
                   }}
+                  addedValues={formData.prefix_language}
+                  onAddValue={(newTags: string[]) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      prefix_language: newTags,
+                    }))
+                  }
                   suggestions={languages?.map(
                     (language) => language.language_name,
                   )}
