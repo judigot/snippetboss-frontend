@@ -19,11 +19,33 @@ export const snippetTypeOptions = {
 } as const;
 
 function AddSnippetModal({}: Props) {
+  const FORM_FIELDS = {
+    SNIPPET_CONTENT: 'snippet_content',
+    PREFIX_ID: 'prefix_id',
+    PROGRAMMING_LANGUAGES: 'programming_languages',
+    PROGRAMMING_LANGUAGES_INPUT: 'programming_languages_input',
+    SNIPPET_TYPE_ID: 'snippet_type_id',
+  } as const;
+
+  interface FormData {
+    [FORM_FIELDS.SNIPPET_CONTENT]: string;
+    [FORM_FIELDS.PREFIX_ID]: string;
+    [FORM_FIELDS.PROGRAMMING_LANGUAGES]: string[];
+    [FORM_FIELDS.PROGRAMMING_LANGUAGES_INPUT]: string;
+    [FORM_FIELDS.SNIPPET_TYPE_ID]: number;
+  }
+
+  const defaultValues = {
+    [FORM_FIELDS.SNIPPET_CONTENT]: '',
+    [FORM_FIELDS.PREFIX_ID]: '',
+    [FORM_FIELDS.PROGRAMMING_LANGUAGES]: [],
+    [FORM_FIELDS.PROGRAMMING_LANGUAGES_INPUT]: '',
+    [FORM_FIELDS.SNIPPET_TYPE_ID]: 1,
+  };
+
   const [selectedLang] = useAtom(selectedLangAtom);
   const [languages] = useAtom(languagesAtom);
 
-  const [snippetLanguagesInput, setSnippetLanguagesInput] =
-    useState<string>('');
   const [snippetLanguages, setSnippetLanguages] = useState<string[]>([]);
 
   const language = languages?.find(
@@ -36,20 +58,12 @@ function AddSnippetModal({}: Props) {
   );
   const prefixOptions = unusedPrefixesByLanguage?.[language?.language_name];
 
-  const [formData, setFormData] = useState({
-    prefix_id: '',
-    snippet_type_id: 1,
-    snippet_content: '',
-  });
+  const [formData, setFormData] = useState<FormData>(defaultValues);
 
   const [, setIsAddPrefixModalVisible] = useAtom(isAddPrefixModalVisibleAtom);
 
   useEffect(() => {
-    setFormData({
-      prefix_id: '',
-      snippet_type_id: 1,
-      snippet_content: '',
-    });
+    setFormData(defaultValues);
     setSnippetLanguages(() => {
       return [];
     });
@@ -131,6 +145,7 @@ function AddSnippetModal({}: Props) {
 
   return (
     <>
+    {JSON.stringify(formData, null, 4)}
       <div
         onClick={handleBackdropClick}
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4"
@@ -243,14 +258,18 @@ function AddSnippetModal({}: Props) {
                 Languages
               </label>
               <TagInput
-                id="programming_languages"
+                id={FORM_FIELDS.PROGRAMMING_LANGUAGES_INPUT}
                 required={true}
                 placeholder="Enter languages"
-                inputValue={snippetLanguagesInput}
-                onInputChange={setSnippetLanguagesInput}
-                addedValues={snippetLanguages}
-                onAddValue={(newTags: string[]) => {
-                  setSnippetLanguages(newTags);
+                inputValue={formData[FORM_FIELDS.PROGRAMMING_LANGUAGES_INPUT]}
+                onInputChange={handleChange}
+                addedValues={formData[FORM_FIELDS.PROGRAMMING_LANGUAGES]}
+                onAddValue={(updatedTags: string[]) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    [FORM_FIELDS.PROGRAMMING_LANGUAGES_INPUT]: '',
+                    [FORM_FIELDS.PROGRAMMING_LANGUAGES]: updatedTags,
+                  }));
                 }}
                 suggestions={languages?.map(
                   (language) => language.language_name,

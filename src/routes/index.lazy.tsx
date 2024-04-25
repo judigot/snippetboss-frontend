@@ -75,16 +75,15 @@ export default function App() {
         placeholder="Add tags"
         inputValue={formData.tagInput}
         addedValues={formData.tagInputValues}
-        setInputValue={(value: string) => {
-          setFormData((prev) => ({ ...prev, tagInput: value }));
-        }}
-        onAddValue={(newTags: string[]) => {
+        onInputChange={handleChange}
+        onAddValue={(updatedTags: string[]) => {
           setFormData((prev) => ({
             ...prev,
-            tagInputValues: newTags,
+            tagInput: '',
+            tagInputValues: updatedTags,
           }));
         }}
-        suggestions={["a", "b", "c"]}
+        suggestions={['Hello', 'World']}
       />
 
       {/* Text Input */}
