@@ -73,6 +73,10 @@ function AddPrefixModal() {
 
       setFormData({ ...formData, [name]: Number(value) });
     }
+
+    if (name === FORM_FIELDS.TAG_INPUT) {
+      setFormData((prev) => ({ ...prev, tag_input: value }));
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -244,13 +248,12 @@ function AddPrefixModal() {
               required={true}
               placeholder="Add prefixes"
               inputValue={formData.prefix_input.trim()}
-              onInputChange={(value: string) => {
-                setFormData((prev) => ({ ...prev, prefix_input: value }));
-              }}
+              onInputChange={handleChange}
               addedValues={formData.prefix_names_raw}
               onAddValue={(newTags: string[]) =>
                 setFormData((prev) => ({
                   ...prev,
+                  prefix_input: '',
                   prefix_names_raw: newTags,
                 }))
               }
@@ -286,20 +289,19 @@ function AddPrefixModal() {
                   Specific languages
                 </label>
                 <TagInput
-                  id="specific_languages"
+                  id="tag_input"
                   required={true}
                   placeholder="Add specific languages"
                   inputValue={formData.tag_input}
-                  onInputChange={(value: string) => {
-                    setFormData((prev) => ({ ...prev, tag_input: value }));
-                  }}
+                  onInputChange={handleChange}
                   addedValues={formData.prefix_language}
-                  onAddValue={(newTags: string[]) =>
+                  onAddValue={(newTags: string[]) => {
                     setFormData((prev) => ({
                       ...prev,
+                      tag_input: '',
                       prefix_language: newTags,
-                    }))
-                  }
+                    }));
+                  }}
                   suggestions={languages?.map(
                     (language) => language.language_name,
                   )}

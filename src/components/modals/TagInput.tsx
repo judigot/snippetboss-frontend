@@ -5,7 +5,7 @@ interface TagInputProps {
   required: boolean;
   placeholder?: string;
   inputValue?: string;
-  onInputChange: (newTags: string) => void;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   addedValues: string[];
   onAddValue: (newTags: string[]) => void;
   suggestions?: string[];
@@ -40,13 +40,11 @@ function TagInput({
     if (e.key === 'Enter' && inputValue.trim()) {
       e.preventDefault();
       addValue(inputValue.trim());
-      onInputChange(''); // Clear the input field after adding a tag
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    onInputChange(input);
+    onInputChange(e);
   };
 
   const addValue = (tag: string) => {
@@ -76,7 +74,6 @@ function TagInput({
 
   const handleSuggestionClick = (suggestion: string) => {
     addValue(suggestion);
-    onInputChange('');
     (document.querySelector(`#${id}`) as HTMLElement | null)?.focus();
   };
 
