@@ -64,6 +64,15 @@ function AddPrefixModal() {
     }
 
     if (name === FORM_FIELDS.SNIPPET_TYPE_ID) {
+      value === '2' &&
+        setTimeout(() => {
+          (
+            document.querySelector(
+              '#specific_languages',
+            ) as HTMLInputElement | null
+          )?.focus();
+        }, 0);
+
       setFormData({ ...formData, [name]: Number(value) });
     }
   };
@@ -198,7 +207,6 @@ function AddPrefixModal() {
 
   return (
     <>
-      {JSON.stringify(formData)}
       <div
         onClick={handleBackdropClick}
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
@@ -236,7 +244,7 @@ function AddPrefixModal() {
             <TagInput
               id="prefix_names"
               required={true}
-              placeholder="Add tags"
+              placeholder="Add prefixes"
               inputValue={formData.prefix_input.trim()}
               setInputValue={(value: string) => {
                 setFormData((prev) => ({ ...prev, prefix_input: value }));
@@ -274,15 +282,15 @@ function AddPrefixModal() {
             {formData.snippet_type_id === 2 && (
               <div className="space-y-1">
                 <label
-                  htmlFor="snippet_type_id"
+                  htmlFor="specific_languages"
                   className="text-sm font-medium text-gray-300"
                 >
                   Specific languages
                 </label>
                 <TagInput
-                  id="tagInput"
+                  id="specific_languages"
                   required={true}
-                  placeholder="Add tags"
+                  placeholder="Add specific languages"
                   inputValue={formData.tag_input}
                   setInputValue={(value: string) => {
                     setFormData((prev) => ({ ...prev, tag_input: value }));
