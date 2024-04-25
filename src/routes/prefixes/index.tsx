@@ -35,6 +35,7 @@ function PrefixesRoute() {
       </div>
       <div className="flex items-center justify-center pb-10">
         <button
+          type="button"
           className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
           onClick={() => setIsAddPrefixModalVisible(true)}
         >

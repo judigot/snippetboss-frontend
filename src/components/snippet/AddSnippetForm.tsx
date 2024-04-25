@@ -78,7 +78,7 @@ export default function Form({
           prefix_id: formData.prefix_id,
           snippet_type_id: Number(formData.snippet_type_id),
         },
-        language: language,
+        language,
       })
         .then(() => {
           setIsAddSnippetVisible(false);

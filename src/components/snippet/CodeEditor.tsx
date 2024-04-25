@@ -190,6 +190,7 @@ export const SnippetViewer = ({ snippet }: { snippet: SnippetResponse }) => {
           }}
         >
           <button
+            type="button"
             style={{
               visibility: isCopyHidden ? 'visible' : 'hidden',
               width: '100%',

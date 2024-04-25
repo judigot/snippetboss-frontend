@@ -3,7 +3,6 @@ import { language } from '@/types';
 import { readLanguage } from '@/api/language/read-language';
 import CodeEditor from '@/components/snippet/Snippets';
 import Prefixes from '@/components/prefix/Prefixes';
-import { AddLanguageComponent } from '@/components/language/AddLanguageComponent';
 import { languagesAtom } from '@/state';
 import { useAtom } from 'jotai';
 import { getLangFromURL } from '@/helpers';
@@ -121,6 +120,7 @@ export default function Languages() {
           languages?.map(({ language_id, display_name, language_name }) => (
             <button
               key={language_id}
+              type="button"
               onClick={() => {
                 changeLanguage(language_name);
                 if (currentPage === pages.ALL_PREFIXES) {

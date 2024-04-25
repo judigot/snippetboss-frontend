@@ -41,6 +41,7 @@ export default function CodeEditor({ language }: Props) {
           <div style={{ textAlign: 'center' }}>
             <h1>{display_name} Snippets</h1>
             <button
+              type="button"
               style={{
                 width: '100%',
                 display: 'grid',

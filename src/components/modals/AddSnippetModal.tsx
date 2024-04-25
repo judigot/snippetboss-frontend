@@ -226,6 +226,7 @@ function AddSnippetModal({}: Props) {
             <div className="flex justify-center">
               <div className="flex items-center justify-center">
                 <button
+                  type="button"
                   className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
                   onClick={() => setIsAddPrefixModalVisible(true)}
                 >
