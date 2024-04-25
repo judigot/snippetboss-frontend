@@ -87,7 +87,7 @@ function TagInput({
 
   const handleBlur = () => {
     setIsFocused(false);
-    setTimeout(() => setShowSuggestions(false), 100); // Delay hiding to allow click event
+    setTimeout(() => setShowSuggestions(false), 200); // Delay hiding to allow click event
   };
 
   return (
