@@ -67,9 +67,7 @@ function AddPrefixModal() {
       value === '2' &&
         setTimeout(() => {
           (
-            document.querySelector(
-              '#specific_languages',
-            ) as HTMLInputElement | null
+            document.querySelector('#specific_languages') as HTMLElement | null
           )?.focus();
         }, 0);
 

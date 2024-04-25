@@ -59,12 +59,7 @@ function AddLanguageModal() {
       language_name: '',
       display_name: '',
     });
-    // Set focus on the language_name input when the modal opens
-    // Use setTimeout to ensure the element is in the DOM and visible
-    const inputElement = document.querySelector(
-      '#language_name',
-    ) as HTMLInputElement;
-    if (inputElement) inputElement.focus();
+    (document.querySelector('#language_name') as HTMLElement | null)?.focus();
   }, []); // Dependencies
 
   return (
