@@ -33,6 +33,7 @@ function TagInput({
   useEffect(() => {
     // Filter to show only unselected options
     filterAndSetSuggestions(inputValue);
+    setShowSuggestions(true);
   }, [inputValue, addedValues]); // Depend on tags to re-filter when they change
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -46,7 +47,6 @@ function TagInput({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setInputValue(input);
-    setShowSuggestions(true);
   };
 
   const addValue = (tag: string) => {
