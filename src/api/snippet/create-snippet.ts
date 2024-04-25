@@ -1,7 +1,7 @@
 import { customFetch } from '@/api/customFetch';
 import { language, snippet } from '@/types';
 
-interface Body {
+export interface SnippetRequestBody {
   snippet: Omit<snippet, 'snippet_id'>;
   language: language[];
 }
