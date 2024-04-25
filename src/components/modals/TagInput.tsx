@@ -90,18 +90,19 @@ function TagInput({
   return (
     <div
       key={id}
-      className={`relative flex items-center px-3 py-2 rounded-md bg-gray-700 border ${isFocused ? 'border-blue-500 ring-blue-500' : 'border-gray-600'}`}
+      className={`relative flex items-center flex-wrap gap-2 px-3 py-2 rounded-md bg-gray-700 border ${isFocused ? 'border-blue-500 ring-blue-500' : 'border-gray-600'}`}
     >
       {addedValues.map((value, index) => (
         <span
           key={`${id}-${index}`}
-          className="flex items-center bg-blue-700 text-white px-2 py-1 mr-2 rounded-full"
+          className="flex items-center bg-blue-700 text-white rounded-full text-sm px-2 py-1 mr-2"
         >
           {value}
           <button
             type="button"
             onClick={() => removeValue(index)}
-            className="text-white ml-2 hover:text-blue-500 focus:outline-none"
+            className="bg-blue-700 hover:bg-blue-500 rounded-full ml-2 inline-flex items-center justify-center w-6 h-6"
+            aria-label={`Remove ${value}`}
           >
             &times;
           </button>
@@ -109,7 +110,7 @@ function TagInput({
       ))}
 
       <input
-        required={addedValues.length === 0 && required} // Remove required if values are already added
+        required={addedValues.length === 0 && required}
         type="text"
         id={id}
         name={id}
@@ -119,22 +120,23 @@ function TagInput({
         onKeyDown={handleKeyDown}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        className="flex-1 bg-transparent text-white outline-none"
+        className="flex-1 bg-transparent text-white outline-none min-w-[100px] basis-[100px]"
       />
+
       {showSuggestions && filteredSuggestions.length > 0 && (
         <ul className="absolute left-0 top-full mt-1 w-full bg-gray-600 rounded shadow-lg z-10">
           {filteredSuggestions.map((suggestion, index) => (
             <li
               key={index}
-              className="p-2 cursor-pointer text-white hover:bg-gray-500 first:rounded-t-md last:rounded-b-md"
+              className="p-2 cursor-pointer text-white hover:bg-gray-500 rounded-t-md first:rounded-t-md last:rounded-b-md"
               onClick={() => handleSuggestionClick(suggestion)}
+              role="option"
             >
               {suggestion}
             </li>
           ))}
         </ul>
       )}
-      <p>{(addedValues.length > 0).valueOf()}</p>
     </div>
   );
 }
