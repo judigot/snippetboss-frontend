@@ -244,7 +244,7 @@ function AddPrefixModal() {
               required={true}
               placeholder="Add prefixes"
               inputValue={formData.prefix_input.trim()}
-              onChange={(value: string) => {
+              onInputChange={(value: string) => {
                 setFormData((prev) => ({ ...prev, prefix_input: value }));
               }}
               addedValues={formData.prefix_names_raw}
@@ -290,7 +290,7 @@ function AddPrefixModal() {
                   required={true}
                   placeholder="Add specific languages"
                   inputValue={formData.tag_input}
-                  onChange={(value: string) => {
+                  onInputChange={(value: string) => {
                     setFormData((prev) => ({ ...prev, tag_input: value }));
                   }}
                   addedValues={formData.prefix_language}

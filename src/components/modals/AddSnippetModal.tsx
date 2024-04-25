@@ -247,7 +247,7 @@ function AddSnippetModal({}: Props) {
                 required={true}
                 placeholder="Enter languages"
                 inputValue={snippetLanguagesInput}
-                setInputValue={setSnippetLanguagesInput}
+                onInputChange={setSnippetLanguagesInput}
                 addedValues={snippetLanguages}
                 onAddValue={(newTags: string[]) => {
                   setSnippetLanguages(newTags);
