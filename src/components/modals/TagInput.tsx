@@ -33,21 +33,20 @@ function TagInput({
   useEffect(() => {
     // Filter to show only unselected options
     filterAndSetSuggestions(inputValue);
-  }, [addedValues]); // Depend on tags to re-filter when they change
+  }, [inputValue, addedValues]); // Depend on tags to re-filter when they change
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && inputValue.trim()) {
-      event.preventDefault();
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && inputValue.trim()) {
+      e.preventDefault();
       addValue(inputValue.trim());
       setInputValue(''); // Clear the input field after adding a tag
-      setShowSuggestions(false);
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input = event.target.value;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
     setInputValue(input);
-    filterAndSetSuggestions(input);
+    setShowSuggestions(true);
   };
 
   const addValue = (tag: string) => {
@@ -78,7 +77,7 @@ function TagInput({
   const handleSuggestionClick = (suggestion: string) => {
     addValue(suggestion);
     setInputValue('');
-    setShowSuggestions(false);
+    (document.querySelector(`#${id}`) as HTMLElement | null)?.focus();
   };
 
   const handleFocus = () => {
@@ -88,7 +87,7 @@ function TagInput({
 
   const handleBlur = () => {
     setIsFocused(false);
-    setTimeout(() => setShowSuggestions(false), 200); // Delay hiding to allow click event
+    setTimeout(() => setShowSuggestions(false), 100); // Delay hiding to allow click event
   };
 
   return (
