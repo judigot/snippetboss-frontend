@@ -7,9 +7,9 @@ export interface SnippetRequestBody {
 }
 
 export const createSnippet = async (
-  formData: Body,
-): Promise<Body | undefined> => {
-  const result: Body | undefined = await customFetch.post({
+  formData: SnippetRequestBody,
+): Promise<SnippetRequestBody | undefined> => {
+  const result: SnippetRequestBody | undefined = await customFetch.post({
     url: `/snippets`,
     body: JSON.stringify(formData),
   });
