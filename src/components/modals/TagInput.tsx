@@ -44,7 +44,7 @@ function TagInput({
     }
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
     setInputValue(input);
     filterAndSetSuggestions(input);
@@ -119,7 +119,7 @@ function TagInput({
         name={id}
         placeholder={placeholder}
         value={inputValue}
-        onChange={handleInputChange}
+        onChange={handleChange}
         onKeyDown={handleKeyDown}
         onFocus={handleFocus}
         onBlur={handleBlur}
