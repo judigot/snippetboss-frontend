@@ -145,7 +145,6 @@ function AddSnippetModal({}: Props) {
 
   return (
     <>
-      {JSON.stringify(formData, null, 4)}
       <div
         onClick={handleBackdropClick}
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4"
