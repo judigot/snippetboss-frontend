@@ -145,7 +145,7 @@ function AddSnippetModal({}: Props) {
 
   return (
     <>
-    {JSON.stringify(formData, null, 4)}
+      {JSON.stringify(formData, null, 4)}
       <div
         onClick={handleBackdropClick}
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4"
@@ -229,8 +229,8 @@ function AddSnippetModal({}: Props) {
                       <option key={prefix_id} value={prefix_id}>
                         {prefix_names.find(
                           (prefix_name) => prefix_name.is_default,
-                        )?.prefix_name || 'Default'}{' '}
-                        - {prefix_description}
+                        )?.prefix_name || 'Default'}
+                        &nbsp;-&nbsp;{prefix_description}
                       </option>
                     ),
                   )}
