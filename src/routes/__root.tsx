@@ -3,7 +3,7 @@ import { Outlet, createRootRoute } from '@tanstack/react-router';
 import '@/styles/global.css';
 import NavBar from '@/components/NavBar';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
-import App from '@/App';
+import SideBar from '@/App';
 
 export const Route = createRootRoute({
   notFoundComponent: () => {
@@ -18,9 +18,7 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <NavBar />
-      <aside className="w-64 text-white p-4">
-        <App />
-      </aside>
+      <SideBar />
       <main className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Outlet />
       </main>

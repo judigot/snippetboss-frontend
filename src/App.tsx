@@ -11,7 +11,7 @@ import AddSnippetModal from '@/components/modals/AddSnippetModal';
 
 interface Props {}
 
-function App({}: Props) {
+function SideBar({}: Props) {
   const [isAddLanguageModalVisible, setIsAddLanguageModalVisible] = useAtom(
     isAddLanguageModalVisibleAtom,
   );
@@ -21,27 +21,22 @@ function App({}: Props) {
   const [isAddPrefixModalVisible] = useAtom(isAddPrefixModalVisibleAtom);
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 50px',
-      }}
-    >
-      <LanguageFilter />
-
-      <button
-        type='button'
-        className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
-        onClick={() => setIsAddLanguageModalVisible(true)}
-      >
-        +
-      </button>
-
-      {isAddLanguageModalVisible && <AddLanguageModal />}
-      {isAddSnippetModalVisible && <AddSnippetModal />}
-      {isAddPrefixModalVisible && <AddPrefixModal />}
-    </div>
+    <aside>
+      <div className="grid grid-cols-[1fr_50px] w-64 text-white p-4">
+        <LanguageFilter />
+        <button
+          type="button"
+          className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+          onClick={() => setIsAddLanguageModalVisible(true)}
+        >
+          +
+        </button>
+        {isAddLanguageModalVisible && <AddLanguageModal />}
+        {isAddSnippetModalVisible && <AddSnippetModal />}
+        {isAddPrefixModalVisible && <AddPrefixModal />}
+      </div>
+    </aside>
   );
 }
 
-export default App;
+export default SideBar;
