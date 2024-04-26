@@ -13,7 +13,7 @@ function NavBar() {
   })();
 
   return (
-    <header className="bg-blue-900">
+    <header className="bg-blue-900 sticky top-0 z-50">
       <nav className="max-w-6xl mx-auto px-4 py-5">
         <div className="flex justify-between items-center">
           <Link
