@@ -9,13 +9,12 @@ import {
 } from '@/state';
 import { useAtom } from 'jotai';
 import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
-import TagInput from '@/components/modals/TagInput';
 
 interface Props {}
 
 export const snippetTypeOptions = {
-  Global: 1,
-  Specific: 2,
+  GLOBAL: "global",
+  SPECIFIC: "specific",
 } as const;
 
 function AddSnippetModal({}: Props) {
@@ -24,7 +23,6 @@ function AddSnippetModal({}: Props) {
     PREFIX_ID: 'prefix_id',
     PROGRAMMING_LANGUAGES: 'programming_languages',
     PROGRAMMING_LANGUAGES_INPUT: 'programming_languages_input',
-    SNIPPET_TYPE_ID: 'snippet_type_id',
   } as const;
 
   interface FormData {
@@ -32,7 +30,6 @@ function AddSnippetModal({}: Props) {
     [FORM_FIELDS.PREFIX_ID]: string;
     [FORM_FIELDS.PROGRAMMING_LANGUAGES]: string[];
     [FORM_FIELDS.PROGRAMMING_LANGUAGES_INPUT]: string;
-    [FORM_FIELDS.SNIPPET_TYPE_ID]: number;
   }
 
   const defaultValues = {
@@ -40,7 +37,6 @@ function AddSnippetModal({}: Props) {
     [FORM_FIELDS.PREFIX_ID]: '',
     [FORM_FIELDS.PROGRAMMING_LANGUAGES]: [],
     [FORM_FIELDS.PROGRAMMING_LANGUAGES_INPUT]: '',
-    [FORM_FIELDS.SNIPPET_TYPE_ID]: 1,
   };
 
   const [selectedLang] = useAtom(selectedLangAtom);
@@ -101,8 +97,7 @@ function AddSnippetModal({}: Props) {
     if (
       formData.snippet_content &&
       formData.prefix_id &&
-      snippetLanguages.length > 0 &&
-      formData.snippet_type_id
+      snippetLanguages.length > 0
     ) {
       const filteredLanguages =
         languages?.filter((language) =>
@@ -114,7 +109,6 @@ function AddSnippetModal({}: Props) {
           snippet: {
             snippet_content: formData.snippet_content,
             prefix_id: Number(formData.prefix_id),
-            snippet_type_id: Number(formData.snippet_type_id),
           },
           language: filteredLanguages,
         })
@@ -247,55 +241,6 @@ function AddSnippetModal({}: Props) {
                   Add prefix
                 </button>
               </div>
-            </div>
-
-            <div className="space-y-1">
-              <label
-                htmlFor="snippet_type_id"
-                className="text-sm font-medium text-gray-300"
-              >
-                Languages
-              </label>
-              <TagInput
-                id={FORM_FIELDS.PROGRAMMING_LANGUAGES_INPUT}
-                required={true}
-                placeholder="Enter languages"
-                inputValue={formData[FORM_FIELDS.PROGRAMMING_LANGUAGES_INPUT]}
-                onInputChange={handleChange}
-                addedValues={formData[FORM_FIELDS.PROGRAMMING_LANGUAGES]}
-                onAddValue={(updatedTags: string[]) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    [FORM_FIELDS.PROGRAMMING_LANGUAGES_INPUT]: '',
-                    [FORM_FIELDS.PROGRAMMING_LANGUAGES]: updatedTags,
-                  }));
-                }}
-                suggestions={languages?.map(
-                  (language) => language.language_name,
-                )}
-              />
-            </div>
-
-            <div className="space-y-1">
-              <label
-                htmlFor="snippet_type_id"
-                className="text-sm font-medium text-gray-300"
-              >
-                Snippet Type
-              </label>
-              <select
-                id="snippet_type_id"
-                name="snippet_type_id"
-                value={formData.snippet_type_id}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              >
-                {Object.entries(snippetTypeOptions).map(([key, value]) => (
-                  <option key={key} value={value}>
-                    {key}
-                  </option>
-                ))}
-              </select>
             </div>
 
             <div className="flex justify-end space-x-3">

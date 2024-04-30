@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 
-import { PrefixResponse, language, snippet_type } from '@/types';
+import { PrefixResponse, language } from '@/types';
 
 export const selectedLangAtom = atom<string | undefined>(undefined);
 
@@ -14,9 +14,7 @@ export const unusedPrefixesByLanguageAtom = atom<
   Record<string, PrefixResponse[]> | null | undefined
 >(undefined);
 
-export const snippetTypesAtom = atom<snippet_type[] | null | undefined>(
-  undefined,
-);
+export const snippetTypesAtom = atom<undefined>(undefined);
 
 export const isAddLanguageModalVisibleAtom = atom<boolean>(false);
 export const isAddPrefixModalVisibleAtom = atom<boolean>(false);

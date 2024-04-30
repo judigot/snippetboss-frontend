@@ -23,7 +23,7 @@ function AddPrefixModal() {
     PREFIX_DESCRIPTION: 'prefix_description',
     PREFIX_NAMES: 'prefix_names',
     PREFIX_NAMES_RAW: 'prefix_names_raw',
-    SNIPPET_TYPE_ID: 'snippet_type_id',
+    SNIPPET_TYPE: 'snippet_type',
     PREFIX_LANGUAGE: 'prefix_language',
     PREFIX_INPUT: 'prefix_input',
     TAG_INPUT: 'tag_input',
@@ -33,7 +33,7 @@ function AddPrefixModal() {
     [FORM_FIELDS.PREFIX_DESCRIPTION]: '',
     [FORM_FIELDS.PREFIX_NAMES]: [],
     [FORM_FIELDS.PREFIX_NAMES_RAW]: [],
-    [FORM_FIELDS.SNIPPET_TYPE_ID]: 1,
+    [FORM_FIELDS.SNIPPET_TYPE]: snippetTypeOptions.GLOBAL,
     [FORM_FIELDS.PREFIX_LANGUAGE]: [],
     [FORM_FIELDS.PREFIX_INPUT]: '',
     [FORM_FIELDS.TAG_INPUT]: '',
@@ -41,9 +41,10 @@ function AddPrefixModal() {
 
   const [formData, setFormData] = useState<
     PrefixForm & {
-      prefix_input: string;
-      prefix_names_raw: string[];
-      tag_input: string;
+      [FORM_FIELDS.PREFIX_INPUT]: string;
+      [FORM_FIELDS.PREFIX_NAMES_RAW]: string[];
+      [FORM_FIELDS.SNIPPET_TYPE]: string;
+      [FORM_FIELDS.TAG_INPUT]: string;
     }
   >(blankForm);
 
@@ -63,7 +64,7 @@ function AddPrefixModal() {
       setFormData((prev) => ({ ...prev, prefix_input: value }));
     }
 
-    if (name === FORM_FIELDS.SNIPPET_TYPE_ID) {
+    if (name === FORM_FIELDS.SNIPPET_TYPE) {
       value === '2' &&
         setTimeout(() => {
           (
@@ -71,7 +72,7 @@ function AddPrefixModal() {
           )?.focus();
         }, 0);
 
-      setFormData({ ...formData, [name]: Number(value) });
+      setFormData({ ...formData, [name]: value });
     }
 
     if (name === FORM_FIELDS.TAG_INPUT) {
@@ -261,26 +262,26 @@ function AddPrefixModal() {
             />
 
             <label
-              htmlFor="snippet_type_id"
+              htmlFor="snippet_type"
               className="text-sm font-medium text-gray-300"
             >
               Snippet Type
             </label>
             <select
-              id="snippet_type_id"
-              name="snippet_type_id"
-              value={formData.snippet_type_id}
+              id="snippet_type"
+              name="snippet_type"
+              value={formData.snippet_type}
               onChange={handleChange}
               className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             >
               {Object.entries(snippetTypeOptions).map(([key, value]) => (
                 <option key={key} value={value}>
-                  {key}
+                  {value.charAt(0).toUpperCase() + value.slice(1)}
                 </option>
               ))}
             </select>
 
-            {formData.snippet_type_id === 2 && (
+            {formData.snippet_type === snippetTypeOptions.SPECIFIC && (
               <div className="space-y-1">
                 <label
                   htmlFor="specific_languages"
