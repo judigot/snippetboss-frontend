@@ -9,9 +9,7 @@ import AddLanguageModal from '@/components/modals/AddLanguageModal';
 import AddPrefixModal from '@/components/modals/AddPrefixModal';
 import AddSnippetModal from '@/components/modals/AddSnippetModal';
 
-interface Props {}
-
-function SideBar({}: Props) {
+function SideBar() {
   const [isAddLanguageModalVisible, setIsAddLanguageModalVisible] = useAtom(
     isAddLanguageModalVisibleAtom,
   );

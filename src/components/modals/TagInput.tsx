@@ -34,6 +34,7 @@ function TagInput({
     // Filter to show only unselected options
     filterAndSetSuggestions(inputValue);
     setShowSuggestions(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue, addedValues]); // Depend on tags to re-filter when they change
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -74,7 +75,7 @@ function TagInput({
 
   const handleSuggestionClick = (suggestion: string) => {
     addValue(suggestion);
-    (document.querySelector(`#${id}`) as HTMLElement | null)?.focus();
+    (document.querySelector(`#${id}`) as HTMLElement)?.focus();
   };
 
   const handleFocus = () => {
@@ -130,7 +131,12 @@ function TagInput({
               key={index}
               className="p-2 cursor-pointer text-white hover:bg-gray-500 rounded-t-md first:rounded-t-md last:rounded-b-md"
               onClick={() => handleSuggestionClick(suggestion)}
+              onKeyDown={() => {}}
               role="option"
+              // role="button" // Role "button" indicates the div acts like a button
+              tabIndex={0} // tabIndex="0" makes the div focusable
+              aria-label="Close modal" // Provides a label that describes the button's action
+              aria-selected={false} // Provides a label that describes the button's action
             >
               {suggestion}
             </li>

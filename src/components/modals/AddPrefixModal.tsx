@@ -8,8 +8,8 @@ import {
 } from '@/state';
 import { useAtom } from 'jotai';
 import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
-import { snippetTypeOptions } from '@/components/modals/AddSnippetModal';
 import TagInput from '@/components/modals/TagInput';
+import { snippetTypeOptions } from '@/constants';
 
 interface PrefixForm extends PrefixRequestBody {}
 
@@ -68,7 +68,7 @@ function AddPrefixModal() {
       value === '2' &&
         setTimeout(() => {
           (
-            document.querySelector('#specific_languages') as HTMLElement | null
+            document.querySelector('#specific_languages') as HTMLElement
           )?.focus();
         }, 0);
 
@@ -125,7 +125,7 @@ function AddPrefixModal() {
     }
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { prefix_input, prefix_description, prefix_names, prefix_names_raw } =
@@ -139,12 +139,7 @@ function AddPrefixModal() {
       (isPrefixInputFilled || isThereSelectedPrefixNames)
     ) {
       // Remove unnecessary properties & mutate prefix names at the same time
-      let {
-        prefix_input,
-        prefix_names_raw: _,
-        tag_input,
-        ...data
-      } = {
+      let { ...data } = {
         ...formData,
         prefix_names: (() => {
           // Convert prefix names strings into object
@@ -174,8 +169,8 @@ function AddPrefixModal() {
       }
 
       try {
-        createPrefix(data);
-        if (selectedLang) {
+        void createPrefix(data);
+        if (selectedLang != null) {
           readPrefixUnusedByLanguage(selectedLang)
             .then((result) => {
               if (result) {
@@ -206,6 +201,7 @@ function AddPrefixModal() {
     if (prefixDescriptionInputRef.current) {
       prefixDescriptionInputRef.current.focus();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -213,6 +209,10 @@ function AddPrefixModal() {
       <div
         onClick={handleBackdropClick}
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+        onKeyDown={() => {}}
+        role="button" // Role "button" indicates the div acts like a button
+        tabIndex={0} // tabIndex="0" makes the div focusable
+        aria-label="Close modal" // Provides a label that describes the button's action
       >
         <div className="bg-stone-900 p-8 rounded-lg shadow-lg max-w-md w-full space-y-4">
           <h1 className="text-lg font-bold text-white">Add Prefix</h1>

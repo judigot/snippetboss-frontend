@@ -10,14 +10,7 @@ import {
 import { useAtom } from 'jotai';
 import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
 
-interface Props {}
-
-export const snippetTypeOptions = {
-  GLOBAL: "global",
-  SPECIFIC: "specific",
-} as const;
-
-function AddSnippetModal({}: Props) {
+function AddSnippetModal() {
   const FORM_FIELDS = {
     SNIPPET_CONTENT: 'snippet_content',
     PREFIX_ID: 'prefix_id',
@@ -46,13 +39,16 @@ function AddSnippetModal({}: Props) {
 
   const language = languages?.find(
     (language) => language.language_name === selectedLang,
-  )!;
+  );
 
   const [, setIsOpen] = useAtom(isAddSnippetModalVisibleAtom);
   const [unusedPrefixesByLanguage, setUnusedPrefixesByLanguage] = useAtom(
     unusedPrefixesByLanguageAtom,
   );
-  const prefixOptions = unusedPrefixesByLanguage?.[language?.language_name];
+  const prefixOptions =
+    unusedPrefixesByLanguage?.[
+      language?.language_name as (typeof language)[keyof typeof language]
+    ];
 
   const [formData, setFormData] = useState<FormData>(defaultValues);
 
@@ -75,10 +71,9 @@ function AddSnippetModal({}: Props) {
       });
     }
 
-    (
-      document.querySelector('#snippet_content') as HTMLTextAreaElement | null
-    )?.focus();
-  }, []);
+    (document.querySelector('#snippet_content') as HTMLElement).focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedLang]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -141,8 +136,11 @@ function AddSnippetModal({}: Props) {
     <>
       <div
         onClick={handleBackdropClick}
-        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4"
-        tabIndex={-1}
+        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+        onKeyDown={() => {}}
+        role="button" // Role "button" indicates the div acts like a button
+        tabIndex={0} // tabIndex="0" makes the div focusable
+        aria-label="Close modal" // Provides a label that describes the button's action
       >
         <div
           onClick={(e) => e.stopPropagation()}
@@ -159,9 +157,12 @@ function AddSnippetModal({}: Props) {
               }
             }
           }}
+          role="button" // Role "button" indicates the div acts like a button
+          tabIndex={0} // tabIndex="0" makes the div focusable
+          aria-label="Close modal" // Provides a label that describes the button's action
         >
           <h1 className="text-xl font-bold text-white">
-            Add {language.display_name} snippet
+            Add {language?.display_name} snippet
           </h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1">
@@ -191,21 +192,23 @@ function AddSnippetModal({}: Props) {
               </label>
               <select
                 onClick={() => {
-                  const isLanguageNameNotInUnusedPrefixes =
-                    !unusedPrefixesByLanguage ||
-                    !(language.language_name in unusedPrefixesByLanguage);
+                  if (language) {
+                    const isLanguageNameNotInUnusedPrefixes =
+                      !unusedPrefixesByLanguage ||
+                      language.language_name in unusedPrefixesByLanguage;
 
-                  if (isLanguageNameNotInUnusedPrefixes) {
-                    readPrefixUnusedByLanguage(language.language_name)
-                      .then((result) => {
-                        if (result) {
-                          /* Dynamically set a property on `setUnusedPrefixesByLanguageAtom` using `language_name` */
-                          setUnusedPrefixesByLanguage({
-                            [language.language_name]: result,
-                          });
-                        }
-                      })
-                      .catch(() => {});
+                    if (isLanguageNameNotInUnusedPrefixes) {
+                      readPrefixUnusedByLanguage(language.language_name)
+                        .then((result) => {
+                          if (result) {
+                            /* Dynamically set a property on `setUnusedPrefixesByLanguageAtom` using `language_name` */
+                            setUnusedPrefixesByLanguage({
+                              [language.language_name]: result,
+                            });
+                          }
+                        })
+                        .catch(() => {});
+                    }
                   }
                 }}
                 id="prefix_id"
@@ -222,7 +225,7 @@ function AddSnippetModal({}: Props) {
                       <option key={prefix_id} value={prefix_id}>
                         {prefix_names.find(
                           (prefix_name) => prefix_name.is_default,
-                        )?.prefix_name || 'Default'}
+                        )?.prefix_name != null || 'Default'}
                         &nbsp;-&nbsp;{prefix_description}
                       </option>
                     ),

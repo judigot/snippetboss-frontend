@@ -59,7 +59,7 @@ function AddLanguageModal() {
       language_name: '',
       display_name: '',
     });
-    (document.querySelector('#language_name') as HTMLElement | null)?.focus();
+    (document.querySelector('#language_name') as HTMLElement)?.focus();
   }, []); // Dependencies
 
   return (
@@ -67,6 +67,10 @@ function AddLanguageModal() {
       <div
         onClick={handleBackdropClick}
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+        onKeyDown={() => {}}
+        role="button" // Role "button" indicates the div acts like a button
+        tabIndex={0} // tabIndex="0" makes the div focusable
+        aria-label="Close modal" // Provides a label that describes the button's action
       >
         <div className="bg-stone-900 p-8 rounded-lg shadow-lg max-w-md w-full space-y-4">
           <h1 className="text-lg font-bold text-white">Add Language</h1>
