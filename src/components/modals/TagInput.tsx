@@ -1,16 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-interface TagInputProps {
-  id: string;
-  required: boolean;
-  placeholder?: string;
-  inputValue?: string;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  addedValues: string[];
-  onAddValue: (newTags: string[]) => void;
-  suggestions?: string[];
-}
-
 function TagInput({
   id,
   required,
@@ -25,7 +14,16 @@ function TagInput({
     'Suggestion 4',
   ],
   onAddValue,
-}: TagInputProps) {
+}: {
+  id: string;
+  required: boolean;
+  placeholder?: string;
+  inputValue?: string;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  addedValues: string[];
+  onAddValue: (newTags: string[]) => void;
+  suggestions?: string[];
+}) {
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false); // Define the state for showing suggestions
