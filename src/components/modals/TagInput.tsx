@@ -137,7 +137,6 @@ function TagInput({
               }}
               onKeyDown={() => {}}
               role="option"
-              // role="button" // Role "button" indicates the div acts like a button
               tabIndex={0} // tabIndex="0" makes the div focusable
               aria-label="Close modal" // Provides a label that describes the button's action
               aria-selected={false} // Provides a label that describes the button's action
