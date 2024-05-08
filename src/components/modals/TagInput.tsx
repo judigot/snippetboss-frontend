@@ -34,7 +34,7 @@ function TagInput({
     // Filter to show only unselected options
     filterAndSetSuggestions(inputValue);
     setShowSuggestions(true);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue, addedValues]); // Depend on tags to re-filter when they change
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -75,7 +75,7 @@ function TagInput({
 
   const handleSuggestionClick = (suggestion: string) => {
     addValue(suggestion);
-    (document.querySelector(`#${id}`) as HTMLElement)?.focus();
+    (document.querySelector(`#${id}`) as HTMLElement).focus();
   };
 
   const handleFocus = () => {
@@ -85,7 +85,9 @@ function TagInput({
 
   const handleBlur = () => {
     setIsFocused(false);
-    setTimeout(() => setShowSuggestions(false), 200); // Delay hiding to allow click event
+    setTimeout(() => {
+      setShowSuggestions(false);
+    }, 200); // Delay hiding to allow click event
   };
 
   return (
@@ -95,13 +97,15 @@ function TagInput({
     >
       {addedValues.map((value, index) => (
         <span
-          key={`${id}-${index}`}
+          key={`${id}-${String(index)}`}
           className="flex items-center bg-blue-700 text-white rounded-full text-sm px-2 py-1 mr-2"
         >
           {value}
           <button
             type="button"
-            onClick={() => removeValue(index)}
+            onClick={() => {
+              removeValue(index);
+            }}
             className="bg-blue-700 hover:bg-blue-500 rounded-full ml-2 inline-flex items-center justify-center w-6 h-6"
             aria-label={`Remove ${value}`}
           >
@@ -130,7 +134,9 @@ function TagInput({
             <li
               key={index}
               className="p-2 cursor-pointer text-white hover:bg-gray-500 rounded-t-md first:rounded-t-md last:rounded-b-md"
-              onClick={() => handleSuggestionClick(suggestion)}
+              onClick={() => {
+                handleSuggestionClick(suggestion);
+              }}
               onKeyDown={() => {}}
               role="option"
               // role="button" // Role "button" indicates the div acts like a button
