@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { language } from '@/types';
 import { SnippetResponse } from '@/types';
 import { SnippetViewer } from '@/components/snippet/CodeEditor';
-import AddSnippetForm from '@/components/snippet/AddSnippetForm';
 import { unusedPrefixesByLanguageAtom } from '@/state';
 import { readPrefixUnusedByLanguage } from '@/api/prefix/read-prefix-unused-by-language';
 import { useAtom } from 'jotai';
@@ -99,10 +98,6 @@ export default function CodeEditor({ language }: Props) {
             {isAddSnippetVisible && (
               <>
                 <br />
-                <AddSnippetForm
-                  language={language}
-                  closeFormCallback={setIsAddSnippetVisible}
-                />
               </>
             )}
           </div>
