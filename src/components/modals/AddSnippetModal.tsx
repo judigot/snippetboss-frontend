@@ -194,8 +194,7 @@ function AddSnippetModal() {
                 onClick={() => {
                   if (language) {
                     const isLanguageNameNotInUnusedPrefixes =
-                      !unusedPrefixesByLanguage ||
-                      language.language_name in unusedPrefixesByLanguage;
+                      !prefixOptions || language.language_name in prefixOptions;
 
                     if (isLanguageNameNotInUnusedPrefixes) {
                       readPrefixUnusedByLanguage(language.language_name)
