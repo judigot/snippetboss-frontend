@@ -221,14 +221,18 @@ function AddSnippetModal() {
                 <option value="">Select a prefix</option>
                 {prefixOptions &&
                   prefixOptions.map(
-                    ({ prefix_id, prefix_description, prefix_names }) => (
-                      <option key={prefix_id} value={prefix_id}>
-                        {prefix_names.find(
+                    ({ prefix_id, prefix_description, prefix_names }) => {
+                      const defaultPrefix: string =
+                        prefix_names.find(
                           (prefix_name) => prefix_name.is_default,
-                        )?.prefix_name != null || 'Default'}
-                        &nbsp;-&nbsp;{prefix_description}
-                      </option>
-                    ),
+                        )?.prefix_name ?? 'Default';
+
+                      return (
+                        <option key={prefix_id} value={prefix_id}>
+                          {defaultPrefix}&nbsp;-&nbsp;{prefix_description}
+                        </option>
+                      );
+                    },
                   )}
               </select>
             </div>
