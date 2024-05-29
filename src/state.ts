@@ -6,12 +6,8 @@ export const selectedLangAtom = atom<string | undefined>(undefined);
 
 export const languagesAtom = atom<language[] | null | undefined>(undefined);
 
-export const prefixesAtom = atom<
-  Record<string, PrefixResponse[]> | null | undefined
->(undefined);
-
 export const unusedPrefixesByLanguageAtom = atom<
-  Record<string, PrefixResponse[]> | null | undefined
+  Record<string, PrefixResponse[]> | undefined
 >(undefined);
 
 export const snippetTypesAtom = atom<undefined>(undefined);
