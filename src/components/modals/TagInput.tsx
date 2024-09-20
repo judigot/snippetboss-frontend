@@ -73,7 +73,10 @@ function TagInput({
 
   const handleSuggestionClick = (suggestion: string) => {
     addValue(suggestion);
-    (document.querySelector(`#${id}`) as HTMLElement).focus();
+    const element = document.querySelector(`#${id}`);
+    if (element instanceof HTMLElement) {
+      element.focus();
+    }
   };
 
   const handleFocus = () => {
@@ -135,7 +138,9 @@ function TagInput({
               onClick={() => {
                 handleSuggestionClick(suggestion);
               }}
-              onKeyDown={() => {}}
+              onKeyDown={() => {
+                //
+              }}
               role="option"
               tabIndex={0} // tabIndex="0" makes the div focusable
               aria-label="Close modal" // Provides a label that describes the button's action
